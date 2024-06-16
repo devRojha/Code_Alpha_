@@ -11,7 +11,7 @@ export default function Appbar2() {
             <button onClick={()=>router.push("/about")} className="hover:text-blue-600">About</button>
             <button className="hover:text-blue-600">Problem</button>
             <button className="hover:text-blue-600">Contest</button>
-            <button className="hover:text-blue-600">Contact</button>
+            <a href="#contact" className="hover:text-blue-600">Contact</a>
         </div>
       </div>
     );
