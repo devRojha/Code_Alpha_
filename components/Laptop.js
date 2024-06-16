@@ -25,7 +25,7 @@ export default function Laptop(){
         <div className="z-30 max-lg:hidden  grid grid-cols-2 absolute w-full h-screen top-0 pt-40">
             <div className="col-span-1 h-[498px] border-r border-b rounded-r-lg mr-3 z-30 bg-black text-white flex flex-col justify-center">
                 <div className="flex justify-center h-full">
-                    <Image className="flex justify-center border-r  rounded-lg w-full" src={photo} alt="Loading..." width={400} height={400} />
+                    <Image className="flex justify-center border-r h-full rounded-lg w-full" src={photo} alt="Loading..." width={400} height={400} />
                 </div>
             </div>
         </div>
