@@ -1,12 +1,12 @@
 
 import About from "@/components/About";
-import Display1 from "@/components/Display1";
+import Hero from "@/components/Hero";
 
 
 export default function Home() {
   return (
     <div className="bg-slate-200">
-      <Display1 />
+      <Hero />
       {/* About  */}
       <About />
     </div>

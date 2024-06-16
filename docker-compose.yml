@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   frontend:
+    container_name: ojfront
     image: online
     ports:
       - "3000:3000"
