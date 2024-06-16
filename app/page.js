@@ -1,14 +1,15 @@
 
-import Laptop from "@/components/Laptop";
-import Image from "next/image";
+import About from "@/components/About";
+import Display1 from "@/components/Display1";
+
 
 export default function Home() {
   return (
-    <div className="">
-      <Laptop />
-      <div className="h-screen w-full z-10">
-        <div className="h-[50%] bg-zinc-900">hii</div> 
-      </div>
+    <div className="bg-slate-200">
+      <Display1 />
+      {/* About  */}
+      <About />
     </div>
   );
 }
+

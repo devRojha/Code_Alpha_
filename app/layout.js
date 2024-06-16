@@ -17,7 +17,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <Appbar1 />
         <Appbar2 />
-        {children}
+        <div className="mt-24">
+          {children}
+        </div>
         <Footer />
       </body>
     </html>
