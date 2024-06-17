@@ -1,4 +1,4 @@
-// File: /app/app/(auth)/signup/page.js
+// File: /Users/devrajkumar/Desktop/code/Online_Judge_/app/(auth)/signup/page.js
 import * as entry from '../../../../../app/(auth)/signup/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

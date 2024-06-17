@@ -1,7 +1,9 @@
 {
-  "/page": "app/page.js",
-  "/(auth)/signin/page": "app/(auth)/signin/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/(auth)/signup/page": "app/(auth)/signup/page.js",
-  "/404/page": "app/404/page.js",
+  "/compiler/page": "app/compiler/page.js",
+  "/problemset/page": "app/problemset/page.js",
+  "/page": "app/page.js",
+  "/problemset/problem/page": "app/problemset/problem/page.js",
   "/about/page": "app/about/page.js"
 }

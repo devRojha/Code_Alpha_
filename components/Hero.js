@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Laptop from "./Laptop";
 import { useEffect, useState } from "react";
+import Clickme from "./Clickme";
 
 
 export default function Hero(){
@@ -23,9 +24,7 @@ function Hero1(){
                 <div className="w-full flex justify-center">
                   <div className="flex flex-col space">
                     <div className="text-slate-600 text-3xl font-bold">Need a cool compiler..?</div>
-                    <div className="mt-20 stick z-30 flex justify-center">
-                      <button className="border px-4 py-2 font-semibold rounded-lg shadow-lg shadow-slate-600 active:border-black">Click me</button>
-                    </div>
+                    <Clickme />
                     {/* <div className="mt-20 text-green-700 text-3xl font-bold"></div> */}
                   </div>
                 </div>
@@ -57,9 +56,7 @@ function Hero2(){
       <div className="w-full flex justify-end pr-4 py-20">
         <div className="flex flex-col space">
           <div className="text-slate-600 text-3xl max-sm:text-[24px] font-bold">Need a cool compiler..?</div>
-          <div className="mt-20  max-sm:text-sm stick z-30 flex justify-center">
-            <button className="border px-4 py-2 font-semibold rounded-lg shadow-lg shadow-slate-600 active:border-black">Click me</button>
-          </div>
+          <Clickme />
           {/* <div className="mt-20 text-green-700 text-3xl font-bold"></div> */}
         </div>
       </div>
