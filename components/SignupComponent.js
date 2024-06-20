@@ -1,20 +1,55 @@
+import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 
 
 export default function SignupComponent(){
     const router = useRouter();
+    const [Email, setEmail] = useState("");
+    const [Name, setName] = useState("");
+    const [Password, setPassword] = useState("");
+    const [Admin, setAdmin] = useState(false);
+
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(`${(Admin)?"http://localhost:3000/api/auth/admin/signup":"http://localhost:3000/api/auth/user/signup"}`, {
+                Name,
+                Email,
+                Password
+            });
+            console.log(response.data)
+            if (response.data.Token) {
+                localStorage.setItem("Token", response.data.Token);
+                if(Admin == true){
+                    localStorage.setItem("Admin", true);
+                }
+                else{
+                    localStorage.setItem("Admin", false);
+                }
+                router.push("/")
+            }
+        } catch (error) {
+            console.error("Signin failed", error);
+            alert("Signin Error")
+        }
+    };
+
     return (
         <div className="bg-slate-400 flex flex-col justify-center">
             <div className="border py-20 shadow-lg shadow-white rounded-lg mx-20 max-lg:mx-10 max-sm:sm-4 flex flex-col justify-center">
                 <div className="mb-10 flex justify-center text-2xl font-bold text-black">Sign up</div>
                 <div className="flex justify-center w-full ">
                     <div className="flex flex-col justify-center max-lg:w-[90%] w-[60%]">
-                        <InputComponent type={"text"} lable={"Name"}/>
-                        <InputComponent type={"text"} lable={"Username"}/>
-                        <InputComponent type={"password"} lable={"Password"}/> 
+                        <InputComponent onChange={(e)=>{setName(e.target.value)}} type={"text"} lable={"Name"}/>
+                        <InputComponent onChange={(e)=>{setEmail(e.target.value)}} type={"text"} lable={"Email"}/>
+                        <InputComponent onChange={(e)=>{setPassword(e.target.value)}} type={"password"} lable={"Password"}/> 
+                        <div className="flex mb-4 ">
+                            <input  onChange={(e)=>setAdmin(e.target.checked)} type={"checkbox"} className="border rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black mr-4"/>
+                            <label  className="text-black mb-2 flex flex-col justify-center h-full">Admin</label>
+                        </div>
                         <div className="flex justify-center space-x-6 mb-4 mt-4">
-                            <button className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Register</button>
+                            <button onClick={handleSubmit} className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Register</button>
                         </div>  
                         <div className="flex justify-center space-x-6">
                             <button className=" text-blue-60 text-blue-700">Forgot Password</button>
@@ -28,11 +63,11 @@ export default function SignupComponent(){
 }
 
 
-function InputComponent({lable, type}){
+function InputComponent({lable, type, onChange}){
     return (
         <div className="flex flex-col mb-4">
-            <label className="text-black mb-2 fond-semibold">{lable}</label>
-            <input type={type} className="rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black"/>
+            <label  className="text-black mb-2">{lable}</label>
+            <input onChange={onChange} type={type} className="rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black"/>
         </div>
     )
 }

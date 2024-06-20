@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/page": [
+    "/(auth)/signin/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/(auth)/signin/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -11,35 +11,25 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/about/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/about/page.js"
-    ],
-    "/(auth)/signin/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(auth)/signin/page.js"
+      "static/chunks/app/page.js"
     ],
     "/(auth)/signup/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(auth)/signup/page.js"
     ],
-    "/compiler/page": [
+    "/about/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/compiler/page.js"
+      "static/chunks/app/about/page.js"
     ],
     "/problemset/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/problemset/page.js"
-    ],
-    "/problemset/problem/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/problemset/problem/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",
