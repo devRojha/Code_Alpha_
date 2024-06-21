@@ -3,8 +3,6 @@
 import { useRouter } from "next/navigation";
 
 
-
-
 export default function Appbar2() {
     const router = useRouter();
     return (

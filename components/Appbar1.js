@@ -11,10 +11,8 @@ export default function Appbar1() {
   useEffect(()=>{
     try{
       const token = localStorage.getItem("Token");
-      if(token){
-        setToken(token)
-        console.log(Token);
-      }
+      setToken(token)
+      console.log(Token);
     }
     catch(e){
       console.log(e);
@@ -39,7 +37,6 @@ export default function Appbar1() {
                 <span className="font-medium text-gray-600 hover:text-blue-900 dark:text-gray-300">D</span>
             </button>
         </div>
-
       </div>
     );
   }
