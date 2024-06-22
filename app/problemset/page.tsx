@@ -13,6 +13,7 @@ interface ProblemType{
 
 
 export default function Page() {
+    var it = 0;
     const router = useRouter();
     const [Admin, setAdmin] = useState<string>("false");
     const [status, setStatus] = useState<string>("All");
@@ -109,7 +110,7 @@ export default function Page() {
                 {/* question grid */}
                 {filterProblem.map(prob => (
                     <Problem
-                        // key={prob.id}
+                        key={it++}
                         id={prob.id}
                         status={prob.status}
                         title={prob.title}
