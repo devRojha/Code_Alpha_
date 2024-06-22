@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 export default function Appbar1() {
   const router = useRouter()
-  const [Token , setToken]= useState("");
+  const [Token , setToken]= useState<string>("");
 
   useEffect(()=>{
     try{
-      const token = localStorage.getItem("Token");
+      const token = localStorage.getItem("Token") || "";
       setToken(token)
       console.log(Token);
     }

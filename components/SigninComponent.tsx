@@ -1,3 +1,5 @@
+"use client"
+
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -5,9 +7,9 @@ import { useState } from "react";
 
 
 export default function SigninComponent(){
-    const [Email, setEmail] = useState("");
-    const [Password, setPassword] = useState("");
-    const [Admin, setAdmin] = useState(false);
+    const [Email, setEmail] = useState<string>("");
+    const [Password, setPassword] = useState<string>("");
+    const [Admin, setAdmin] = useState<Boolean>(false);
     const handleSubmit = async () => {
         try {
             const response = await axios.post(`${(Admin)?"http://localhost:3000/api/auth/admin/signin":"http://localhost:3000/api/auth/user/signin"}`, {
@@ -17,11 +19,11 @@ export default function SigninComponent(){
             // console.log(response.data)
             if (response.data.Token) {
                 localStorage.setItem("Token", response.data.Token);
-                if(Admin == true){
-                    localStorage.setItem("Admin", true);
+                if(Admin === true){
+                    localStorage.setItem("Admin", "true");
                 }
                 else{
-                    localStorage.setItem("Admin", false);
+                    localStorage.setItem("Admin", "false");
                 }
                 router.push("/")
             }
@@ -41,7 +43,7 @@ export default function SigninComponent(){
                         <InputComponent onChange={(e)=> setEmail((e.target.value))} type={"text"} lable={"Email"}/>
                         <InputComponent onChange={(e)=> setPassword(e.target.value)} type={"password"} lable={"Password"}/> 
                         <div className="flex mb-4 ">
-                            <input onChange={(e)=>setAdmin(e.target.checked)} type={"checkbox"} className="border rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black mr-4"/>
+                            <input onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setAdmin(e.target.checked)} type={"checkbox"} className="border rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black mr-4"/>
                             <label  className="text-black mb-2 flex flex-col justify-center h-full">Admin</label>
                         </div>
                         <div className="flex justify-center space-x-6 mb-4 mt-4">
@@ -58,8 +60,13 @@ export default function SigninComponent(){
     )
 }
 
+interface InputComponentType{
+    lable: string,
+    type: string,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-function InputComponent({lable, type, onChange}){
+function InputComponent({lable, type, onChange}: InputComponentType){
     return (
         <div className="flex flex-col mb-4">
             <label className="text-black mb-2 fond-semibold">{lable}</label>

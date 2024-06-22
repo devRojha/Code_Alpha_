@@ -62,7 +62,12 @@ export default function Page(){
     )
 }
 
-function AboutCompo({title, para}){
+interface AboutType {
+    title: String,
+    para: String
+}
+
+function AboutCompo({title, para}:AboutType){
     return (
         <div className="mb-10">
             <div className="text-lg font-semibold mb-2">{title}</div>

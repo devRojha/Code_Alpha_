@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function About(){
     const router = useRouter();
-    const [photo, setPhoto] = useState("/code2.png")
+    const [photo, setPhoto] = useState<string>("/code2.png")
     const [it , setIt] = useState(0);
     const dPhoto = ["/code.png", "/code2.png"];
     useEffect(()=>{

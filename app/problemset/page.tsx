@@ -3,14 +3,23 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+interface ProblemType{
+    id: Number,
+    status: String,
+    title: String,
+    difficulty: String,
+    accept: String
+}
+
+
 export default function Page() {
     const router = useRouter();
-    const [Admin, setAdmin] = useState("false");
-    const [status, setStatus] = useState("All");
-    const [difficulty, setDifficulty] = useState("All");
-    const [searchProb, setSearchProb] = useState("");
-    const [filterProblem, setFilterProblem] = useState([]);
-    const [AllProblem, setAllProblem] = useState([
+    const [Admin, setAdmin] = useState<string>("false");
+    const [status, setStatus] = useState<string>("All");
+    const [difficulty, setDifficulty] = useState<string>("All");
+    const [searchProb, setSearchProb] = useState<string>("");
+    const [filterProblem, setFilterProblem] = useState<ProblemType[]>([]);
+    const [AllProblem, setAllProblem] = useState<ProblemType[]>([
         {
             id: 1,
             status: "Solved",
@@ -100,7 +109,7 @@ export default function Page() {
                 {/* question grid */}
                 {filterProblem.map(prob => (
                     <Problem
-                        key={prob.id}
+                        // key={prob.id}
                         id={prob.id}
                         status={prob.status}
                         title={prob.title}
@@ -113,7 +122,8 @@ export default function Page() {
     );
 }
 
-function Problem({ status, title, difficulty, accept }) {
+
+function Problem({ status, title, difficulty, accept}: ProblemType) {
     const router = useRouter();
     return (
         <div className="border-b shadow-sm shadow-white grid grid-cols-6 text-white mx-4">

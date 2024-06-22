@@ -6,10 +6,10 @@ import { useState } from "react";
 
 export default function SignupComponent(){
     const router = useRouter();
-    const [Email, setEmail] = useState("");
-    const [Name, setName] = useState("");
-    const [Password, setPassword] = useState("");
-    const [Admin, setAdmin] = useState(false);
+    const [Email, setEmail] = useState<string>("");
+    const [Name, setName] = useState<string>("");
+    const [Password, setPassword] = useState<string>("");
+    const [Admin, setAdmin] = useState<boolean>(false);
 
     const handleSubmit = async () => {
         try {
@@ -22,10 +22,10 @@ export default function SignupComponent(){
             if (response.data.Token) {
                 localStorage.setItem("Token", response.data.Token);
                 if(Admin == true){
-                    localStorage.setItem("Admin", true);
+                    localStorage.setItem("Admin", "true");
                 }
                 else{
-                    localStorage.setItem("Admin", false);
+                    localStorage.setItem("Admin", "false");
                 }
                 router.push("/")
             }
@@ -62,8 +62,13 @@ export default function SignupComponent(){
     )
 }
 
+interface InputComponentType{
+    lable: string,
+    type: string,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-function InputComponent({lable, type, onChange}){
+function InputComponent({lable, type, onChange}:InputComponentType){
     return (
         <div className="flex flex-col mb-4">
             <label  className="text-black mb-2">{lable}</label>

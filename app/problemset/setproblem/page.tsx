@@ -5,10 +5,10 @@ import { useState } from "react"
 
 
 export default function Page(){
-    const [Title , setTitle] = useState("");
-    const [Description , setDescription] = useState(["descreption1"]);
-    const [Deficulty , setDeficulty] = useState("Easy");
-    const [Constraint , setConstraint] = useState("");
+    const [Title , setTitle] = useState<string>("");
+    const [Description , setDescription] = useState<string[]>(["descreption1"]);
+    const [Deficulty , setDeficulty] = useState<string>("Easy");
+    const [Constraint , setConstraint] = useState<string>("");
     return (
         <div className="bg-zinc-900 pt-8 text-white px-8 border-b">
             <div className="text-3xl font-bold mb-10">Set your Problem</div>
