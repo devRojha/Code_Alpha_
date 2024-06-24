@@ -1,7 +1,8 @@
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../../db");
+const {z} = require("zod");
+const {User} = require("../../db");
 require('dotenv').config();
 
 const secretKey = process.env.SECRET_KEY;
@@ -13,7 +14,7 @@ const signinType = z.object({
 
 const AdminSignin = async (req, res) => {
     const { Email, Password } = req.body;
-    
+
     const zodPass = signinType.safeParse({ Email, Password });
     if(!zodPass.success){
         res.status(409).json({msg: "input Validation"})

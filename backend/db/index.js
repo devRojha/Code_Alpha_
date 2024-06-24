@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 const userSchema = require("./schema/userSchemas");
+const problemSchema = require("./schema/ProblemSchema");
+
 require('dotenv').config();
 
 const dbURL = process.env.DB_URL;
@@ -15,6 +17,7 @@ mongoose.connect(dbURL)
 
 // Create the User model
 const User = mongoose.model('User', userSchema);
+const Problem = mongoose.model('Problem', problemSchema);
 
 
-module.exports =  User;
+module.exports =  { User, Problem };

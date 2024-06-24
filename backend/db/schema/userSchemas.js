@@ -13,7 +13,19 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    Problem: {
+    ProblemSolved: {
+        type: [String], // Assuming the problems are stored as an array of strings
+        default: []
+    },
+    ProblemAttempt: {
+        type: [String], // Assuming the problems are stored as an array of strings
+        default: []
+    },
+    ContestSolved: {
+        type: [String], // Assuming the problems are stored as an array of strings
+        default: []
+    },
+    ContestAttempt: {
         type: [String], // Assuming the problems are stored as an array of strings
         default: []
     },
