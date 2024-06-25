@@ -102,7 +102,7 @@ export default function Page() {
     }
     return (
         <div className="bg-slate-700">
-            <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 border-b overflow-y-auto pt-10">
+            <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 border-b overflow-y-auto pt-10 ">
                 {/* filter component */}
                 <div className="mb-10 px-6 flex">
                     <select onChange={(e) => setStatus(e.target.value)} className="text-white bg-slate-800 px-2 py-2 border rounded-lg focus:outline-none mr-6">
