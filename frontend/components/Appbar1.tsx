@@ -29,12 +29,12 @@ export default function Appbar1() {
         {/* After Authenticate  */}
         <div className={`space-x-4 max-sm:text-sm ${(Token)?"flex":"hidden"}`}>
           <button onClick={()=> {
-            localStorage.removeItem("Token"); 
-            localStorage.removeItem("Admin");
+            localStorage.clear();
             setToken("");
+            router.push("/");
             }} className="hover:text-blue-600">Log Out</button>
-            <button onClick={()=> router.push("/about")} className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                <span className="font-medium text-gray-600 hover:text-blue-900 dark:text-gray-300">D</span>
+            <button onClick={()=> router.push("/profile")} className="hover:bg-blue-700 hover:text-white text-gray-600 active:border relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                <span className="font-medium  dark:text-gray-300">D</span>
             </button>
         </div>
       </div>

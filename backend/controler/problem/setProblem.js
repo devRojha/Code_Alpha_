@@ -18,7 +18,7 @@ const setProblem = async (req, res) => {
     }
     try { 
         //from middleware
-        const userId = "2";
+        const userId = req.userId
         const ProblemSet = await Problem.create({
             Title,
             Description,
