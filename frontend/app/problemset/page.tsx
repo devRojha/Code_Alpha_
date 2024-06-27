@@ -144,13 +144,13 @@ export default function Page() {
 }
 
 
-function Problem({ status, title, difficulty, accept}: ProblemType) {
+function Problem({ status, title, difficulty, accept, id}: ProblemType) {
     const router = useRouter();
     return (
         <div className="border-b shadow-sm shadow-white grid grid-cols-6 text-white mx-4">
             <div className={`col-span-1 px-4 py-6 ${status === "Solved" ? "text-green-700" : status === "Unsolved" ? "text-red-700" : "text-yellow-600"}`}>{status}</div>
             <div className="col-span-3 px-4 py-6">
-                <button onClick={() => { router.push("/problemset/problem") }}>{title}</button>
+                <button onClick={() => { router.push(`/problemset/problem/${id}`) }}>{title}</button>
             </div>
             <div className={`col-span-1 px-4 py-6 ${difficulty === "Easy" ? "text-green-700" : difficulty === "Hard" ? "text-red-700" : "text-yellow-600"}`}>{difficulty}</div>
             <div className="col-span-1 px-4 py-6">{accept}</div>
