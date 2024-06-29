@@ -1,19 +1,19 @@
 const { User } = require("../../db")
-const {z} = require("zod");
+// const {z} = require("zod");
 
-const updateType = z.object({
-    Name: z.optional(z.string().min(3)),
-    Email: z.optional(z.string().email()),
+// const updateType = z.object({
+//     Name: z.optional(z.string().min(3)),
+//     Email: z.optional(z.string().email()),
 
-})
+// })
 
 const updateUser = async (req, res) => {
     const userId = req.userId
     const { Name, Email } = req.body;
-    const inputval = updateType.safeParse({Name , Email});
-    if(!inputval.success){
-        return res.status(409).json({msg:"give correct credential"});
-    }
+    // const inputval = updateType.safeParse({Name , Email});
+    // if(!inputval.success){
+    //     return res.status(409).json({msg:"give correct credential"});
+    // }
     try {
         if(Email){
             const found = await User.find({Email : Email});

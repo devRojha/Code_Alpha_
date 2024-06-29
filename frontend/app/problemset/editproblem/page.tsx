@@ -1,7 +1,8 @@
 "use client"
 
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+// import { useRouter }  from "next/router";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react"
 
 interface ProblemType{
@@ -15,6 +16,8 @@ interface ProblemType{
 
 export default function Page(){
     const router = useRouter();
+    // const {id} = useParams();
+    const router1 = useRouter()
     const parms = useSearchParams().toString();
     const id = parms.substring(3);
     const [Title , setTitle] = useState<string>("");
