@@ -1,11 +1,12 @@
 
 const fs = require("fs");
 const path = require("path");
-const {v4:uuid} = require("uuid")
+const { exec } = require("child_process");
+const { stdout, stdin, stderr } = require("process");
 
 const outputPath = path.join(__dirname, "outputs") 
 if(!fs.existsSync(outputPath)){
-    fs.mkdirSync(outputPath, {recursive:true})
+    fs.mkdirSync(outputPath, {recursive:true});
 }
  
 const executeCpp = (filePath)=>{
@@ -14,7 +15,23 @@ const executeCpp = (filePath)=>{
     const fileName = `${jobId}.out`;
     const outputFilePath = path.join(outputPath , fileName);
     // fs.writeFileSync(outputFilePath, "kfmkdlfdf");
-    return outputFilePath
+
+    return new Promise((resolve , reject)=>{
+        exec(
+            `g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && ./${fileName}`
+            , (error, stdout , stderr)=>{
+            if(error){
+                reject(error);
+            }
+            else if(stderr){
+                reject(stderr);
+            }
+            else{
+                resolve(stdout)
+            }
+        });
+    });
+    
 }
 
 module.exports = executeCpp

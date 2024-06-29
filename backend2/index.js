@@ -1,21 +1,22 @@
 const express = require("express");
 const generateFile = require("./generateFile");
 const executeCpp = require("./executeCpp");
+const cors = require("cors")
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.post("/run", async (req , res)=>{
     const { code, lang="cpp" } = req.body;
     if(code === undefined || !(code.length > 0)){
-        return res.status(400).json({success : "false" , message:"empty code"})
+        return res.json({success : "false" , message:"empty code"})
     }
     try{
         const filePath = generateFile(lang , code);
-        const output = executeCpp(filePath);
-        return res.status(200).json({filePath, output})
+        const output = await executeCpp(filePath);
+        return res.status(200).json({success:"true", output})
         // res.status(200).json({code, lang})
     }
     catch(e){
