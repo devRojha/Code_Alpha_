@@ -80,7 +80,7 @@ export default function Page() {
                 <div className="overflow-y-auto border-r-4 border-r-slate-300 h-full px-2 border-b max-lg:border-r-0 ">
                     <div className="text-3xl font-bold mb-16 flex justify-between overflow-auto">
                         <div>{problem?.Title}</div>
-                            <div className="text-lg font-normal mt-1">{problem?.Deficulty}</div>
+                        <div className={`${(problem?.Deficulty == 'Easy')?"text-green-600":(problem?.Deficulty == 'Hard')?"text-red-600":"text-yellow-600"} text-lg font-normal mt-1 mr-4`}>{problem?.Deficulty}</div>
                         <div className={`${canEdit?"flex":"hidden"} text-lg font-normal mr-6 space-x-3`}>
                             <button onClick={()=>router.push(`/problemset/editproblem?id=${id}`)} className="active:border px-2 py-1 rounded-lg bg-blue-600">Edit</button>
                             <button onClick={async ()=>{
