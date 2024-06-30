@@ -10,7 +10,7 @@ interface ProblemType{
     status: String,
     title: String,
     difficulty: String,
-    accept: String
+    accept: Number
 }
 
 
@@ -50,11 +50,15 @@ export default function Page() {
                 if(problemStatus === "NA"){
                     problemStatus = "Unsolved"
                 }
+                let Accept = Math.floor(Math.random() * 101);
+                if(FetchProblems[i].TotalSubmit > 0){
+                    Accept = (FetchProblems[i].AcceptSubmit* 100)/FetchProblems[i].TotalSubmit;
+                }
                 var problem:ProblemType = {
                     id : FetchProblems[i]._id,
                     title : FetchProblems[i].Title,
                     difficulty : FetchProblems[i].Deficulty,
-                    accept: "35.6%",
+                    accept: Accept,
                     status : problemStatus
                 }
                 console.log(problem);
@@ -153,7 +157,7 @@ function Problem({ status, title, difficulty, accept, id}: ProblemType) {
                 <button className="hover:text-blue-600" onClick={() => { router.push(`/problemset/problem?id=${id}`) }}>{title}</button>
             </div>
             <div className={`col-span-1 px-4 py-6 ${difficulty === "Easy" ? "text-green-700" : difficulty === "Hard" ? "text-red-700" : "text-yellow-600"}`}>{difficulty}</div>
-            <div className="col-span-1 px-4 py-6">{accept}</div>
+            <div className="col-span-1 px-4 py-6">{accept.toString()+` %`}</div>
         </div>
     );
 }

@@ -1,9 +1,11 @@
 "use client"
-import React from "react";
-import AceEditor from "react-ace";
 
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/theme-github";
+import React from 'react';
+import AceEditor from 'react-ace';
+
+import 'ace-builds/src-noconflict/mode-c_cpp';
+import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-monokai';
 import "ace-builds/src-noconflict/ext-language_tools";
 
 export default function CodeEditorcool({code, setCode}:{code:string , setCode:any}){
@@ -11,8 +13,8 @@ export default function CodeEditorcool({code, setCode}:{code:string , setCode:an
         <div className={`h-[100%] w-full focus:outline-none bg-black text-white overflow-y-auto`}>
             <AceEditor
                 placeholder="Placeholder Text"
-                mode="java"
-                theme="monokai"
+                mode="c_cpp"
+                theme=""
                 name="blah2"
                 onChange={(newCode) => setCode(newCode)}
                 fontSize={16}

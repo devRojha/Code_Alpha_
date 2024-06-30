@@ -88,6 +88,7 @@ export default function Page(){
                         }
                     })
                 }} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800">Edit</button>
+                <button onClick={()=>router.push(`/problemset/addTestCases?id=${id}`)} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800 ml-6">Add Test cases</button>            
             </div>
         </div>
     )

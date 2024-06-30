@@ -54,4 +54,21 @@ const updateUser = async (req, res) => {
     }
 }
 
-module.exports = updateUser;
+const updateProblemSolved = async (req , res)=>{
+    const userId = req.userId
+    const {problemId} = req.body;
+    try{
+        await User.findByIdAndUpdate(
+            {_id : userId},
+            { $push: { ProblemSolved: problemId }}
+        )
+        res.status(200).json({msg:"problemId store in solved"})
+    }
+    catch(e){
+        console.log("Error" + e);
+        res.status(500).json({msg:"enternal server down"})
+    }
+
+}
+
+module.exports = {updateUser , updateProblemSolved};

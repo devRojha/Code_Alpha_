@@ -13,7 +13,11 @@ export default function Page() {
     const [easy, setEasy] = useState([]);
     const [medium, setMedium] = useState([]);
     const [hard, setHard] = useState([]);
+    const [easyCreate, setEasyCreate] = useState([]);
+    const [hardCreate, setHardCreate] = useState([]);
+    const [mediumCreate, setMediumCreate] = useState([]);
     const [user, setUser] = useState({});
+    const [admin , setAdmin] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -32,6 +36,19 @@ export default function Page() {
                 setEasy(easyProblems);
                 setMedium(mediumProblems);
                 setHard(hardProblems);
+
+                // fetchnig problem which created by admin
+                const response1 = await axios.get("http://localhost:3000/api/problem/allproblem")
+                const filterByAdmin = response1.data.Problems?.filter(problem => problem.AdminId === response.data._id) || [];
+                const easycreate = filterByAdmin?.filter(problem => problem.Deficulty === "Easy") || [];
+                const mediumcreate = filterByAdmin?.filter(problem => problem.Deficulty === "Medium") || [];
+                const hardcreate = filterByAdmin?.filter(problem => problem.Deficulty === "Hard") || [];
+                setEasyCreate(easycreate);
+                setMediumCreate(mediumcreate);
+                setHardCreate(hardcreate);
+                if(localStorage.getItem("Admin") && localStorage.getItem("Admin") === "true"){
+                    setAdmin(true);
+                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -120,7 +137,7 @@ export default function Page() {
                 {/* problem solved list  */}
                 <div className="w-full">
                     <label className="font-bold">Problem Solved :</label>
-                    <div className="grid grid-cols-3 mt-8 shadow-lg shadow-white border-b h-[500px]">
+                    <div className="grid grid-cols-3 mt-8 shadow-md shadow-white border-b h-[500px]">
                         <div className="border-r border-l flex flex-col items-center overflow-y-auto my-2">
                             <div className="text-green-800 font-semibold text-2xl mb-4">{easy.length} Easy</div>
                             {easy && easy.map((problem) => (
@@ -136,6 +153,30 @@ export default function Page() {
                         <div className="border-r border-l flex flex-col items-center overflow-y-auto my-2">
                             <div className="text-red-600 font-semibold text-2xl mb-4">{hard.length} Hard</div>
                             {hard && hard.map((problem) => (
+                                <Problems key={problem._id} _id={problem._id} Title={problem.Title} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                {/* problem make */}
+                <div className={`w-full ${admin?"":"hidden"}`}>
+                    <label className="font-bold">Problem created :</label>
+                    <div className="grid grid-cols-3 mt-8 shadow-lg shadow-white border-b h-[500px]">
+                        <div className="border-r border-l flex flex-col items-center overflow-y-auto my-2">
+                            <div className="text-green-800 font-semibold text-2xl mb-4">{easyCreate.length} Easy</div>
+                            {easyCreate && easyCreate.map((problem) => (
+                                <Problems key={problem._id} _id={problem._id} Title={problem.Title} />
+                            ))}
+                        </div>
+                        <div className="border-r border-l flex flex-col items-center overflow-y-auto my-2">
+                            <div className="text-yellow-600 font-semibold text-2xl mb-4">{mediumCreate.length} Medium</div>
+                            {mediumCreate && mediumCreate.map((problem) => (
+                                <Problems key={problem._id} _id={problem._id} Title={problem.Title} />
+                            ))}
+                        </div>
+                        <div className="border-r border-l flex flex-col items-center overflow-y-auto my-2">
+                            <div className="text-red-600 font-semibold text-2xl mb-4">{hardCreate.length} Hard</div>
+                            {hardCreate && hardCreate.map((problem) => (
                                 <Problems key={problem._id} _id={problem._id} Title={problem.Title} />
                             ))}
                         </div>

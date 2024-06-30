@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const userSchema = require("./schema/userSchemas");
 const problemSchema = require("./schema/ProblemSchema");
+const TestCasesSchema = require("./schema/TestCases");
 
 require('dotenv').config();
 
@@ -18,6 +19,7 @@ mongoose.connect(dbURL)
 // Create the User model
 const User = mongoose.model('User', userSchema);
 const Problem = mongoose.model('Problem', problemSchema);
+const TestCases = mongoose.model('TestCases', TestCasesSchema)
 
 
-module.exports =  { User, Problem };
+module.exports =  { User, Problem, TestCases };
