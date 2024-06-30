@@ -9,7 +9,7 @@ export default function Page() {
     const [dark, setDark] = useState<boolean>(true);
     const [errorCompile, setErrorCompile] = useState<boolean>(false);
     const [lang, setLang] = useState<string>("cpp");
-    const [code, setCode] = useState<string>("");
+    const [code, setCode] = useState<string>(`#include <iostream>\nusing namespace std;\n\nint main(){\n\ncout<<"hii"<<endl;\n\nreturn 0;\n}`);
     const [input, setInput] = useState<string>("");
     const [output, setOutput] = useState<string>("");
 
@@ -61,7 +61,7 @@ export default function Page() {
                             </button>
                         </div>
                     </div>
-                    <div className={`h-[724px] w-full focus:outline-none bg-black text-white overflow-y-auto`}>
+                    <div className="h-[724px] w-full bg-black text-white">
                         <CodeEditorcool code={code} setCode={setCode}/>
                     </div>
                 </div>

@@ -1,25 +1,34 @@
 "use client"
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css';
-import '@/app/custom-prism-theme.css';
+import React from "react";
+import AceEditor from "react-ace";
+
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 export default function CodeEditorcool({code, setCode}:{code:string , setCode:any}){
     return(
         <div className={`h-[100%] w-full focus:outline-none bg-black text-white overflow-y-auto`}>
-            <Editor
-                value={code}
-                onValueChange={code => setCode(code)}
-                highlight={code => highlight(code, languages.javascript, 'javascript')}
-                padding={10}
-                className="focus:outline-none h-full "
-                style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    border:"0px"
-                }}
-            />
+            <AceEditor
+                            placeholder="Placeholder Text"
+                            mode="java"
+                            theme="monokai"
+                            name="blah2"
+                            onChange={(newCode) => setCode(newCode)}
+                            fontSize={14}
+                            showPrintMargin={false}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            value={code}
+                            setOptions={{
+                                enableBasicAutocompletion: false,
+                                enableLiveAutocompletion: false,
+                                enableSnippets: false,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                            }}
+                            style={{ width: '100%', height: '100%'}}
+                        />
         </div>
     )
 }

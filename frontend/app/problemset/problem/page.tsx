@@ -2,6 +2,7 @@
 "use client"
 
 import CodeEditorcool from "@/components/CodeEditorcool";
+import OutputShow from "@/components/OutputShow";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ export default function Page() {
     const router = useRouter();
     const [errorCompile, setErrorCompile] = useState<boolean>(false);
     const [lang, setLang] = useState<string>("cpp");
-    const [code, setCode] = useState<string>("");
+    const [code, setCode] = useState<string>(`#include <iostream>\nusing namespace std;\n\nint main(){\n\ncout<<"hii"<<endl;\n\nreturn 0;\n}`);
     const [input, setInput] = useState<string>("");
     const [output, setOutput] = useState<string>("Output");
     const [verdicData , setVerdicData] = useState<string>("Verdic");
@@ -109,7 +110,7 @@ export default function Page() {
                         <option value={"python"}>PYTHON</option>
                     </select>
                 </div>
-                <div className=" bg-black px-4 py-4 focus:outline-none border-b  h-[700px]">
+                <div className=" bg-black focus:outline-none border-b  h-[700px]">
                     <CodeEditorcool setCode={setCode} code={code}/>
                 </div>
                 <div className=" h-[350px]" id="terminal">
@@ -125,8 +126,8 @@ export default function Page() {
                             }} className={`${verdic?"border-b text-blue-500":"text-white"}`}>VERDICT</button>
                     </div>
                     <textarea onChange={(e)=>{setInput(e.target.value)}} className={`${inputView?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto focus:outline-none`} placeholder="write input here..."/>
-                    <div className={`${outputView?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto`}>
-                        {output}
+                    <div className={`${outputView?"":"hidden"} bg-zinc-800 w-full h-[305px] overflow-auto`}>
+                        <OutputShow outputCode={output} /> 
                     </div>
                     <div className={`${verdic?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto`}>
                         {verdicData}

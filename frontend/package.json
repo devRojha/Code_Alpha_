@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "ace-builds": "^1.35.1",
     "axios": "^1.7.2",
     "next": "14.2.4",
     "prismjs": "^1.29.0",
     "react": "^18",
+    "react-ace": "^12.0.0",
     "react-dom": "^18",
     "react-simple-code-editor": "^0.13.1"
   },
