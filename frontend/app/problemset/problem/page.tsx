@@ -21,7 +21,7 @@ export default function Page() {
     const router = useRouter();
     const [errorCompile, setErrorCompile] = useState<boolean>(false);
     const [lang, setLang] = useState<string>("cpp");
-    const [code, setCode] = useState<string>(`#include <iostream>\nusing namespace std;\n\nint main(){\n\ncout<<"hii"<<endl;\n\nreturn 0;\n}`);
+    const [code, setCode] = useState<string>(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
     const [input, setInput] = useState<string>("");
     const [output, setOutput] = useState<string>("Output");
     const [verdicData , setVerdicData] = useState<string>("Verdic");
@@ -99,7 +99,7 @@ export default function Page() {
             </div>
             {/* compiler  */}
             <div className="">
-                <div className="h-10 bg-zinc-600 flex justify-between py-1 px-8">
+                <div className="h-13 bg-zinc-600 flex justify-between py-3 px-8">
                     <div className="h-full space-x-4 ">
                         <button onClick={codeExecute} className="h-full bg-blue-700 hover:bg-blue-800 active:text-black border rounded-lg px-2 py-1">Run</button>
                         <button className="h-full hover:bg-green-700 active:text-black border rounded-lg px-2 py-1 bg-green-800">Submit</button>
@@ -110,11 +110,11 @@ export default function Page() {
                         <option value={"python"}>PYTHON</option>
                     </select>
                 </div>
-                <div className=" bg-black focus:outline-none border-b  h-[700px]">
+                <div className="bg-black focus:outline-none border-b  h-[700px]">
                     <CodeEditorcool setCode={setCode} code={code}/>
                 </div>
-                <div className=" h-[350px]" id="terminal">
-                    <div className="text-md font-bold ml-6 py-2 flex justify-around">
+                <div className=" h-[350px]" >
+                    <div className="text-md font-bold ml-6 py-2 flex justify-around" id="terminal">
                         <button onClick={()=>{
                             setInputView(true); setOutputView(false); setVerdic(false);
                             }} className={`${inputView?"border-b text-blue-500":"text-white"}`}>INPUT</button>
