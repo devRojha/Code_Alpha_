@@ -1,0 +1,53 @@
+/* custom-prism-theme.css */
+code[class*="language-"],
+pre[class*="language-"] {
+    background: none !important;
+}
+
+.token.tag,
+.token.attr-name,
+.token.attr-value,
+.token.punctuation,
+.token.operator {
+    background: none !important;
+}
+
+/* Custom CSS to remove blue border on focus */
+.react-simple-code-editor textarea:focus,
+.react-simple-code-editor div:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.code-editor-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+  
+  .line-numbers {
+    text-align: right;
+    padding-right: 10px;
+    user-select: none;
+    font-size: 13px;
+    line-height: 1.5;
+    border-right: 1px solid #ddd;
+    padding-top: 10px; /* Adjust to match Editor padding */
+  }
+  
+  .line-numbers-dark {
+    background: #1e1e1e;
+    color: #858585;
+  }
+  
+  .line-numbers-light {
+    background: #f5f5f5;
+    color: #999;
+  }
+  
+  .code-editor {
+    width: calc(100% - 30px);
+    height: 100%;
+  }
+  
