@@ -33,15 +33,9 @@ export default function Page() {
             }});
             const FetchProblems = response1.data.Problems;
             const UserProblemsolved = response2.data.ProblemSolved;
-            const UserProblemattempt= response2.data.ProblemAttempt;
             var Problems =[];
             for(var i = 0 ; i < FetchProblems.length ; i++){
                 var problemStatus = "NA";
-                for(var j = 0 ; j < UserProblemattempt.length ; j++){
-                    if(UserProblemattempt[j] === FetchProblems._id){
-                        problemStatus = "Attempted";
-                    }
-                }
                 for(var j = 0 ; j < UserProblemsolved.length ; j++){
                     if(UserProblemsolved[j] === FetchProblems._id){
                         problemStatus = "Solved";

@@ -41,12 +41,20 @@ export default function Page() {
                 <div className={`col-span-1 border-r `}>
                     <div className={`flex border-b px-4 py-2  justify-between`}>
                         <select 
-                            onChange={(e) => setLang(e.target.value)} 
+                            onChange={(e) => {
+                                setLang(e.target.value);
+                                if(e.target.value === "java"){
+                                    setCode(`\nimport java.util.Scanner;\n\n//Make the main class Main as it is\npublic class Main {\n   public static void main(String[] args) {\n      Scanner scanner = new Scanner(System.in);\n\n       System.out.println("Hello World");\n\n      // Close the scanner to release resources\n     scanner.close();\n  }\n}`);
+                                }
+                                else if(e.target.value === "cpp"){
+                                    setCode(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+                                }
+                            }} 
                             className={` focus:outline-none border p-1 rounded-md`}
                         >
                             <option value="cpp">C++</option>
                             <option value="java">JAVA</option>
-                            <option value="py">PYTHON</option>
+                            {/* <option value="py">PYTHON</option> */}
                         </select>
                         <div className="space-x-20">
                             {/* <select 

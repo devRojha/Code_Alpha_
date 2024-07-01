@@ -105,10 +105,20 @@ export default function Page() {
                         <button onClick={codeExecute} className="h-full bg-blue-700 hover:bg-blue-800 active:text-black border rounded-lg px-2 py-1">Run</button>
                         <button className="h-full hover:bg-green-700 active:text-black border rounded-lg px-2 py-1 bg-green-800">Submit</button>
                     </div>
-                    <select onChange={(e)=>setLang(e.target.value)} className="border px-2 py-1 rounded-lg bg-transparent focus:outline-none">
-                        <option value={"c++"}>C++</option>
+                    {/* selecting lang and scaleton  */}
+                    <select onChange={(e)=>{
+                        setLang(e.target.value);
+                        if(e.target.value === "java"){
+                            setCode(`\nimport java.util.Scanner;\n\n//Make the main class Main as it is\npublic class Main {\n   public static void main(String[] args) {\n      Scanner scanner = new Scanner(System.in);\n\n       System.out.println("Hello World");\n\n      // Close the scanner to release resources\n     scanner.close();\n  }\n}`);
+                        }
+                        else if(e.target.value === "cpp"){
+                            setCode(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+                        }
+                        
+                        }} className="border px-2 py-1 rounded-lg bg-transparent focus:outline-none">
+                        <option value={"cpp"}>C++</option>
                         <option value={"java"}>JAVA</option>
-                        <option value={"python"}>PYTHON</option>
+                        {/* <option value={"python"}>PYTHON</option> */}
                     </select>
                 </div>
                 <div className="bg-black focus:outline-none border-b  h-[700px]">
