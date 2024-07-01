@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import axios from 'axios';
 import CodeEditorcool from '@/components/CodeEditorcool';
@@ -10,11 +10,12 @@ export default function Page() {
     const router = useRouter();
     const [errorCompile, setErrorCompile] = useState<boolean>(false);
     const [lang, setLang] = useState<string>("cpp");
-    const [code, setCode] = useState<string>(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+    const [code, setCode] = useState<string>(``);
     const [input, setInput] = useState<string>("");
     const [output, setOutput] = useState<string>("");
 
     const codeExecute = async () => {
+        setOutput("")
         try {
             const response = await axios.post("http://localhost:8000/run", {
                 lang,
@@ -29,11 +30,33 @@ export default function Page() {
                 setOutput(response.data.output);
             }
             router.push("#terminal")
-        } catch (e) {
-            console.log(e);
+        } catch (error:any) {
+
+            setOutput(error.response.data.message);
             setErrorCompile(true);
         }
     }
+    useEffect(()=>{
+        const codeStore = localStorage.getItem("codeStore");
+        if(codeStore && codeStore != "empty"){
+            setCode(codeStore);
+        }
+        else{
+            localStorage.removeItem("codeStore");
+            localStorage.setItem("codeStore", `\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+            setCode(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+        }
+    },[])
+    //code store for user
+    useEffect(()=>{
+        const delay = setTimeout(async()=>{
+            localStorage.removeItem("codeStore");
+            localStorage.setItem("codeStore", code || "empty");
+            
+        }, 2000);
+        return ()=> clearTimeout(delay);
+    },[code])
+
 
     return (
         <div className={`bg-zinc-800   pt-4`}>
@@ -76,18 +99,20 @@ export default function Page() {
                         <CodeEditorcool code={code} setCode={setCode}/>
                     </div>
                 </div>
-                <div className={`col-span-1 grid grid-cols-1 max-lg:grid-cols-2 border-r `}>
+                <div className={`col-span-1 grid grid-cols-1 max-lg:grid-cols-2 max-md:grid-cols-1 border-r `}>
                     <div className={`border-b h-full `}>
                         <div className={`py-3 px-4 border-b font-bold text-white`}>INPUT</div>
                         <textarea 
                             onChange={(e) => setInput(e.target.value)} 
-                            className={`p-4 text-white bg-black focus:outline-none w-full h-[87%] max-lg:h-[350px]`} 
+                            className={`p-4 text-white bg-black focus:outline-none w-full h-[334px]`} 
                         />
                     </div>
                     <div className={`border-b h-full `} >
                         <div id='terminal' className={`py-3 px-4 border-b font-bold text-white max-lg:border-l`}>OUTPUT</div>
-                        <div className={`p-4 focus:outline-none w-full h-[89%] max-lg:h-[350px] `}>
-                            <span className={`${errorCompile ? "text-red-700" : "text-white"} `}>{output}</span>
+                        <div className={`p-4 focus:outline-none w-full h-[334px] `}>
+                            <div className={`bg-zinc-800 w-full h-full  p-4 overflow-auto`}>
+                                <span className={`${errorCompile ? "text-red-700" : "text-white"} `}>{output}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

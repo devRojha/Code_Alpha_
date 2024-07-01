@@ -15,12 +15,14 @@ const executeCpp = (filePath, inputPath) => {
 
     return new Promise((resolve, reject) => {
         exec(
-            `g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && ./${fileName} < ${inputPath}`
-            , (error, stdout, stderr) => {
+            `g++ -std=c++11  ${filePath} -o ${outputFilePath} && cd ${outputPath} && ./${fileName} < ${inputPath}`
+            ,(error, stdout, stderr) => {
                 if (error) {
-                    reject(error);
+                    console.error('Compilation error:', error);
+                    reject(`Compilation ${error}`);
                 } else if (stderr) {
-                    reject(stderr);
+                    console.error('Runtime Error:', stderr);
+                    reject(`Runtime Error ${stderr}`);
                 } else {
                     resolve(stdout);
                 }

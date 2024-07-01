@@ -5,7 +5,7 @@ const mainRouter = require("./routes/index.js")
 
 app.use(cors())
 app.use(express.json());
-
+app.use(express.urlencoded({extended:true}));
 app.use("/api", mainRouter);
 
 app.get("/", (req, res)=>{

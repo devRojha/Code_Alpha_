@@ -13,6 +13,20 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    ProblemCode:{
+        type: [{
+            problemId:{
+                type: String
+            },
+            lang:{
+                type: String
+            },
+            code:{
+                type: String
+            }
+        }],
+        default:[]
+    },
     ProblemSolved: {
         type: [String], // Assuming the problems are stored as an array of strings
         default: []

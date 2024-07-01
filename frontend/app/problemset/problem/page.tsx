@@ -11,8 +11,8 @@ interface ProblemType{
     _id: String,
     Title: String,
     Deficulty: String,
-    Description: String,
-    Constraint : String,
+    Description: string,
+    Constraint : string,
     AdminId: String,
 }
 export default function Page() {
@@ -21,10 +21,10 @@ export default function Page() {
     const router = useRouter();
     const [errorCompile, setErrorCompile] = useState<boolean>(false);
     const [lang, setLang] = useState<string>("cpp");
-    const [code, setCode] = useState<string>(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+    const [code, setCode] = useState<string>("");
     const [input, setInput] = useState<string>("");
-    const [output, setOutput] = useState<string>("Output");
-    const [verdicData , setVerdicData] = useState<string>("Verdic");
+    const [output, setOutput] = useState<string>("");
+    const [verdicData , setVerdicData] = useState<string>("");
     const [problem , setProblem] = useState<ProblemType>();
     const [canEdit , setcanEdit] = useState<boolean>(false);
     const [inputView , setInputView] = useState<boolean>(true);
@@ -32,6 +32,8 @@ export default function Page() {
     const [verdic , setVerdic] = useState<boolean>(false);
 
     const codeExecute = async () => {
+        setOutput("")
+        setVerdicData("")
         try {
             const response = await axios.post("http://localhost:8000/run", {
                 lang,
@@ -41,16 +43,15 @@ export default function Page() {
             if (response.data.success === "true") {
                 setErrorCompile(false);
                 setOutput(response.data.output);
-            } else {
-                setErrorCompile(true);
-                setOutput(response.data.message);
             }
             setInputView(false); setOutputView(true); setVerdic(false);
-            router.push("#terminal")
-        } catch (e) {
-            console.log(e);
+        } catch (error:any) {
+            setVerdicData(error?.response?.data?.message || "");
+            console.log(error.data);
             setErrorCompile(true);
+            setInputView(false); setOutputView(false); setVerdic(true);
         }
+        router.push("#terminal")
     }
 
     useEffect(()=>{
@@ -67,6 +68,26 @@ export default function Page() {
                 if(response.data.Edit === "true" && Admin === "true"){
                     setcanEdit(true);
                 }
+
+                const userDetail = await axios("http://localhost:3000/api/userProfile",{
+                    headers:{
+                        Token : localStorage.getItem("Token")
+                    }
+                })
+                const problemCode = userDetail.data?.ProblemCode || [];
+                let flag = true;
+                let it = -1;
+                for(let i =0 ; i < problemCode.length ;i++){
+                    if(problemCode[i].problemId === id){
+                        setCode(problemCode[i].code);
+                        it = i;
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag || (problemCode[it].code.length == 0)){
+                    setCode(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"ved"<<endl;\n\n  return 0;\n}`);
+                }
             }
             catch(e){
                 console.log(e);
@@ -75,11 +96,27 @@ export default function Page() {
         getProblem();
     },[id])
 
+    //working code store for user
+    useEffect(()=>{
+        const delay = setTimeout(async()=>{
+            const response = await axios.put("http://localhost:3000/api/userProfile/update/problemcode",{
+                problemId : id,
+                lang,
+                code
+            },{
+                headers:{
+                    Token : localStorage.getItem("Token")
+                }
+            });
+        }, 2000);
+        return ()=> clearTimeout(delay);
+    },[code])
+
     return (
-        <div className="border-b bg-zinc-900 pt-8 px-4 text-white min-h-screen grid grid-cols-2 max-lg:grid-cols-1">
+        <div className="border-b bg-zinc-800 pt-8  text-white min-h-screen grid grid-cols-2 max-lg:grid-cols-1">
             {/* problem  */}
                 <div className="overflow-y-auto border-r-4 border-r-slate-300 h-full px-2 border-b max-lg:border-r-0 ">
-                    <div className="text-3xl font-bold mb-16 flex justify-between overflow-auto">
+                    <div className="text-3xl font-bold mb-6 flex justify-between overflow-auto">
                         <div>{problem?.Title}</div>
                         <div className={`${(problem?.Deficulty == 'Easy')?"text-green-600":(problem?.Deficulty == 'Hard')?"text-red-600":"text-yellow-600"} text-lg font-normal mt-1 mr-4`}>{problem?.Deficulty}</div>
                         <div className={`${canEdit?"flex":"hidden"} text-lg font-normal mr-6 space-x-3`}>
@@ -95,8 +132,11 @@ export default function Page() {
                             }} className="active:border px-2 py-1 bg-red-600 rounded-lg">Delete</button>
                         </div>
                     </div>
-                    <p className="flex mb-4">{problem?.Description}</p>
-                    <div className="flex mb-4">{problem?.Constraint}</div>
+                    <div className="border-b h-[600px] overflow-y-auto">
+                        <div className="flex mb-4"><OutputShow outputCode={problem?.Description || "Not Given ..."} /> </div>
+                        <div className="text-2xl text-slate-400 font-bold mb-2">Constraints</div>
+                        <div className="flex mb-4"><OutputShow outputCode={problem?.Constraint || "Not Given ..."} /> </div>
+                    </div>
             </div>
             {/* compiler  */}
             <div className="">
@@ -124,6 +164,7 @@ export default function Page() {
                 <div className="bg-black focus:outline-none border-b  h-[700px]">
                     <CodeEditorcool setCode={setCode} code={code}/>
                 </div>
+                {/* terminal section  */}
                 <div className=" h-[350px]" >
                     <div className="text-md font-bold ml-6 py-2 flex justify-around" id="terminal">
                         <button onClick={()=>{
@@ -138,9 +179,9 @@ export default function Page() {
                     </div>
                     <textarea onChange={(e)=>{setInput(e.target.value)}} className={`${inputView?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto focus:outline-none`} placeholder="write input here..."/>
                     <div className={`${outputView?"":"hidden"} bg-zinc-800 w-full h-[305px] overflow-auto`}>
-                        <OutputShow errorCompile={errorCompile} outputCode={output} /> 
+                        <OutputShow outputCode={output} /> 
                     </div>
-                    <div className={`${verdic?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto`}>
+                    <div className={`${verdic?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto text-red-700`}>
                         {verdicData}
                     </div>
                 </div> 

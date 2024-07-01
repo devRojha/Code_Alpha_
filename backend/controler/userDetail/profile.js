@@ -18,6 +18,7 @@ const profile = async (req , res)=>{
                 Name: userFound.Name,
                 Email: userFound.Email,
                 ProblemSolved: solvedProblem,
+                ProblemCode : userFound.ProblemCode,
                 ContestSolved: [],
                 Admin: true,
             });

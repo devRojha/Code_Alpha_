@@ -71,4 +71,42 @@ const updateProblemSolved = async (req , res)=>{
 
 }
 
-module.exports = {updateUser , updateProblemSolved};
+const updateProblemCode = async (req, res) => {
+    const userId = req.userId;
+    const { problemId, code, lang } = req.body;
+
+    try {
+        let user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the problemId already exists in the array
+        const problemIndex = user.ProblemCode.findIndex(
+            (p) => p.problemId === problemId
+        );
+
+        if (problemIndex !== -1) {
+            // If problemId exists, update code and lang
+            user.ProblemCode[problemIndex].code = code;
+            user.ProblemCode[problemIndex].lang = lang;
+        } else {
+            // If problemId doesn't exist, create a new entry
+            user.ProblemCode.push({ problemId, code, lang });
+        }
+
+        await user.save();
+        res.status(200).json({
+            message: "Problem code updated successfully" ,
+            code,
+            lang
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+module.exports = {updateUser , updateProblemSolved , updateProblemCode };

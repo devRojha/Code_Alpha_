@@ -22,7 +22,7 @@ app.post("/run", async (req , res)=>{
         // res.status(200).json({code, lang})
     }
     catch(e){
-        return res.status(500).json({success : "false" , message:"Error" + e.message})
+        return res.status(500).json({success : "false" , message: e})
     }
 })
 

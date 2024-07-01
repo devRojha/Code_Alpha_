@@ -6,7 +6,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import '@/app/custom-prism-theme.css';
 
-export default function OutputShow({outputCode,errorCompile}:{outputCode:string, errorCompile:boolean}){
+export default function OutputShow({outputCode}:{outputCode:string}){
     return(
         <div className={`h-[100%] w-full focus:outline-none bg-black text-white overflow-y-auto`}>
             <Editor
@@ -14,7 +14,7 @@ export default function OutputShow({outputCode,errorCompile}:{outputCode:string,
                 onValueChange={code => console.log(code)}
                 highlight={code => highlight(code, languages.plaintext, 'plaintext')}
                 padding={10}
-                className={`focus:outline-none h-full bg-zinc-800 text-lg ${errorCompile?"text-red-400":"text-white"}`}
+                className={`focus:outline-none h-full bg-zinc-800 text-lg text-white`} 
             />
         </div>
     )
