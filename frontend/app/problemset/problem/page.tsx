@@ -35,14 +35,15 @@ export default function Page() {
         try {
             const response = await axios.post("http://localhost:8000/run", {
                 lang,
-                code
+                code,
+                input
             });
-            if (response.data.output.cmd) {
-                setErrorCompile(true);
-                setOutput(response.data.output.cmd);
-            } else {
+            if (response.data.success === "true") {
                 setErrorCompile(false);
                 setOutput(response.data.output);
+            } else {
+                setErrorCompile(true);
+                setOutput(response.data.message);
             }
             setInputView(false); setOutputView(true); setVerdic(false);
             router.push("#terminal")
@@ -127,7 +128,7 @@ export default function Page() {
                     </div>
                     <textarea onChange={(e)=>{setInput(e.target.value)}} className={`${inputView?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto focus:outline-none`} placeholder="write input here..."/>
                     <div className={`${outputView?"":"hidden"} bg-zinc-800 w-full h-[305px] overflow-auto`}>
-                        <OutputShow outputCode={output} /> 
+                        <OutputShow errorCompile={errorCompile} outputCode={output} /> 
                     </div>
                     <div className={`${verdic?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto`}>
                         {verdicData}

@@ -18,7 +18,8 @@ export default function Page() {
         try {
             const response = await axios.post("http://localhost:8000/run", {
                 lang,
-                code
+                code,
+                input
             });
             if (response.data.output.cmd) {
                 setErrorCompile(true);
