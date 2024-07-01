@@ -17,10 +17,6 @@ const UserSchema = new mongoose.Schema({
         type: [String], // Assuming the problems are stored as an array of strings
         default: []
     },
-    ProblemAttempt: {
-        type: [String], // Assuming the problems are stored as an array of strings
-        default: []
-    },
     ContestSolved: {
         type: [String], // Assuming the problems are stored as an array of strings
         default: []

@@ -17,7 +17,6 @@ interface ProblemType{
 export default function Page(){
     const router = useRouter();
     // const {id} = useParams();
-    const router1 = useRouter()
     const parms = useSearchParams().toString();
     const id = parms.substring(3);
     const [Title , setTitle] = useState<string>("");

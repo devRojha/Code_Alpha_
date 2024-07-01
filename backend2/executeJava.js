@@ -1,37 +1,53 @@
-
+const { exec } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const { exec } = require("child_process");
-const { stdout, stdin, stderr } = require("process");
 
-const outputPath = path.join(__dirname, "outputs") 
-if(!fs.existsSync(outputPath)){
-    fs.mkdirSync(outputPath, {recursive:true});
-}
- 
-const executeJava = (filePath)=>{
-    // filePath =" /Users/devrajkumar/Desktop/Code/Online_Judge_/backend2/codes/b2d12f8e-b05a-45d6-978c-e78dfae347ea.cpp"
-    const jobId = path.basename(filePath).split(".")[0]; // b2d12f8e-b05a-45d6-978c-e78dfae347ea
-    const fileName = `${jobId}.out`;
-    const outputFilePath = path.join(outputPath , fileName);
-    // fs.writeFileSync(outputFilePath, "kfmkdlfdf");
+const executeJava = (filepath, inputPath) => {
+  const dirPath = path.dirname(filepath);
+  const tempFilePath = path.join(dirPath, "Main.java");
 
-    return new Promise((resolve , reject)=>{
-        exec(
-            `g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && ./${fileName}`
-            , (error, stdout , stderr)=>{
-            if(error){
-                reject(error);
+  return new Promise((resolve, reject) => {
+    // Rename the file to Main.java
+    fs.rename(filepath, tempFilePath, (renameErr) => {
+      if (renameErr) {
+        return reject({ error: renameErr });
+      }
+
+      // Compile the Java file
+      exec(
+        `javac ${tempFilePath}`,
+        (compileError, compileStdout, compileStderr) => {
+          if (compileError) {
+            return reject({ error: compileError, stderr: compileStderr });
+          }
+
+          // Construct the command to run the compiled Java class
+          let command = `java -cp ${dirPath} Main`;
+          if (inputPath) {
+            command += ` < ${inputPath}`;
+          }
+
+          // Execute the Java class
+          exec(command, (runError, stdout, stderr) => {
+            if (runError) {
+              return reject({ error: runError, stderr });
             }
-            else if(stderr){
-                reject(stderr);
+            if (stderr) {
+              return reject(stderr);
             }
-            else{
-                resolve(stdout)
-            }
-        });
+
+            // Clean up: Rename the file back to its original name
+            fs.rename(tempFilePath, filepath, (cleanupErr) => {
+              if (cleanupErr) {
+                return reject({ error: cleanupErr });
+              }
+              resolve(stdout);
+            });
+          });
+        }
+      );
     });
-    
-}
+  });
+};
 
 module.exports = executeJava
