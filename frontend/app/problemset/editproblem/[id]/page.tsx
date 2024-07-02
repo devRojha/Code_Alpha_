@@ -1,8 +1,7 @@
 "use client"
 
 import axios from "axios";
-// import { useRouter }  from "next/router";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import {  useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 
 interface ProblemType{
@@ -13,12 +12,10 @@ interface ProblemType{
     Constraint : String,
     AdminId: String,
 }
-
 export default function Page(){
     const router = useRouter();
-    // const {id} = useParams();
-    const parms = useSearchParams().toString();
-    const id = parms.substring(3);
+    const param = useParams();
+    const id = param.id;
     const [Title , setTitle] = useState<string>("");
     const [Description , setDescription] = useState<string>("");
     const [Deficulty , setDeficulty] = useState<string>("");
@@ -34,6 +31,7 @@ export default function Page(){
                     }
                 })
                 setProblem(response.data.problem);
+
                 const Admin = localStorage.getItem("Admin")
                 if(!(response.data.Edit === "true" && Admin === "true")){
                     router.push("/")
@@ -73,7 +71,7 @@ export default function Page(){
                 <label className="text-2xl max-md:text-lg">Set Constraint</label>
                 <textarea onChange={(e)=>{setConstraint(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] h-[300px] focus:outline-none" placeholder={`${problem?.Constraint}`}/>
             </div>
-            <div className="pb-10">
+            <div className="pb-10 flex">
                 <button onClick={()=>{
                     axios.put("http://localhost:3000/api/problem/editproblem",{
                         id: id,
@@ -87,7 +85,7 @@ export default function Page(){
                         }
                     })
                 }} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800">Edit</button>
-                <button onClick={()=>router.push(`/problemset/addTestCases?id=${id}`)} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800 ml-6">Add Test cases</button>            
+                <button onClick={()=>router.push(`/problemset/addTestCases/${id}`)} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800 ml-6">Add Test cases</button>
             </div>
         </div>
     )

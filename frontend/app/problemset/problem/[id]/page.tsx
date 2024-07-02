@@ -4,8 +4,9 @@
 import CodeEditorcool from "@/components/CodeEditorcool";
 import OutputShow from "@/components/OutputShow";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
 
 interface ProblemType{
     _id: String,
@@ -16,8 +17,8 @@ interface ProblemType{
     AdminId: String,
 }
 export default function Page() {
-    const parms = useSearchParams().toString();
-    const id = parms.substring(3);
+    const param = useParams();
+    const id = param.id;
     const router = useRouter();
     const [errorCompile, setErrorCompile] = useState<boolean>(false);
     const [lang, setLang] = useState<string>("cpp");

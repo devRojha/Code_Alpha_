@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    image: backend
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  backend2:
+    image: backend2
+    # build:
+    #   context: ./backend2
+    #   dockerfile: Dockerfile
+    container_name: backend2
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    image: frontend
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - 3001:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules

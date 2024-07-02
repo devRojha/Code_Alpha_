@@ -1,11 +1,11 @@
 "use client";
 import axios from "axios";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function Page() {
-    const params = useSearchParams().toString();
-    const id = params.substring(3);
+    const param = useParams();
+    const id = param.id;
     const [Cases, setCases] = useState<string[]>(Array(10).fill(""));
     const [Result, setResult] = useState<string[]>(Array(10).fill(""));
 

@@ -30,19 +30,20 @@ const executeJava = (filepath, inputPath) => {
           // Execute the Java class
           exec(command, (runError, stdout, stderr) => {
             if (runError) {
-              return reject({ error: runError, stderr });
+              reject({ error: runError, stderr });
             }
-            if (stderr) {
-              return reject(stderr);
+            else if (stderr) {
+              reject(stderr);
             }
-
-            // Clean up: Rename the file back to its original name
-            fs.rename(tempFilePath, filepath, (cleanupErr) => {
-              if (cleanupErr) {
-                return reject({ error: cleanupErr });
-              }
-              resolve(stdout);
-            });
+            else{
+              // Clean up: Rename the file back to its original name
+              fs.rename(tempFilePath, filepath, (cleanupErr) => {
+                if (cleanupErr) {
+                  reject({ error: cleanupErr });
+                }
+                resolve(stdout);
+              });
+            }
           });
         }
       );
