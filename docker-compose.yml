@@ -33,6 +33,7 @@ services:
     container_name: frontend
     depends_on:
       - backend
+      - backend2
     ports:
       - 3001:3001
     volumes:
