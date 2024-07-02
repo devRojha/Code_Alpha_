@@ -164,7 +164,7 @@ export default function Page() {
                         <div>{problem?.Title}</div>
                         <div className={`${(problem?.Deficulty == 'Easy')?"text-green-600":(problem?.Deficulty == 'Hard')?"text-red-600":"text-yellow-600"} text-lg font-normal mt-1 mr-4`}>{problem?.Deficulty}</div>
                         <div className={`${canEdit?"flex":"hidden"} text-lg font-normal mr-6 space-x-3`}>
-                            <button onClick={()=>router.push(`/problemset/editproblem?id=${id}`)} className="active:border px-2 py-1 rounded-lg bg-blue-600">Edit</button>
+                            <button onClick={()=>router.push(`/problemset/editproblem/${id}`)} className="active:border px-2 py-1 rounded-lg bg-blue-600">Edit</button>
                             <button onClick={async ()=>{
                                 await axios.delete("http://localhost:3000/api/problem/deleteproblem",{
                                     headers:{
