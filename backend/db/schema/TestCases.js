@@ -9,6 +9,10 @@ const TestCasesSchema = new mongoose.Schema({
         type: [String], 
         default: []
     },
+    Result:{
+        type: [String], 
+        default: []
+    },
     AdminId:{
         type : String,
         required : false

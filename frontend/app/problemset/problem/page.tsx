@@ -30,6 +30,48 @@ export default function Page() {
     const [inputView , setInputView] = useState<boolean>(true);
     const [outputView , setOutputView] = useState<boolean>(false);
     const [verdic , setVerdic] = useState<boolean>(false);
+    const [result , setResult] = useState<boolean[]>([]);
+    const [showSubmit , setShowSubmit] = useState<boolean>(false);
+
+    const codeSubmit = async()=>{
+        setOutput("")
+        setVerdicData("")
+        // geeting all testcases 
+        const response = await axios.get("http://localhost:3000/api/problem/testcases",{
+            headers:{
+                ProblemId : id
+            }
+        })
+        const testCases = response.data.testCase;
+        console.log(testCases);
+        try {
+            //submit code and testcases for getting output
+            const response = await axios.post("http://localhost:8000/submit", {
+                lang,
+                code,
+                testCases
+            });
+            if (response.data.success === "true") {
+                setErrorCompile(false);
+                const codeOutput = response.data.output;
+                //comparing code output with result
+                const compare = await axios.post("http://localhost:3000/api/problem/compareresult",{
+                    codeOutput,
+                    problemid : id
+                })
+                console.log(compare.data.result);
+                setResult(compare.data.result);
+            }
+            setInputView(false); setOutputView(true); setVerdic(false);
+        } catch (error:any) {
+            setVerdicData(error?.response?.data?.message || "");
+            console.log(error.data);
+            setErrorCompile(true);
+            setInputView(false); setOutputView(false); setVerdic(true);
+        }
+        setShowSubmit(true);
+        router.push("#terminal");
+    }
 
     const codeExecute = async () => {
         setOutput("")
@@ -51,6 +93,7 @@ export default function Page() {
             setErrorCompile(true);
             setInputView(false); setOutputView(false); setVerdic(true);
         }
+        setShowSubmit(false);
         router.push("#terminal")
     }
 
@@ -96,7 +139,7 @@ export default function Page() {
         getProblem();
     },[id])
 
-    //working code store for user
+    //code store for user
     useEffect(()=>{
         const delay = setTimeout(async()=>{
             const response = await axios.put("http://localhost:3000/api/userProfile/update/problemcode",{
@@ -128,6 +171,12 @@ export default function Page() {
                                         id : id
                                     }
                                 })
+                                await axios.delete("http://localhost:3000/api/problem/deletetestCases",{
+                                    headers:{
+                                        Token : localStorage.getItem("Token"),
+                                        ProblemId : id
+                                    }
+                                })
                                 router.push("/problemset")
                             }} className="active:border px-2 py-1 bg-red-600 rounded-lg">Delete</button>
                         </div>
@@ -143,7 +192,7 @@ export default function Page() {
                 <div className="h-13 bg-zinc-600 flex justify-between py-3 px-8">
                     <div className="h-full space-x-4 ">
                         <button onClick={codeExecute} className="h-full bg-blue-700 hover:bg-blue-800 active:text-black border rounded-lg px-2 py-1">Run</button>
-                        <button className="h-full hover:bg-green-700 active:text-black border rounded-lg px-2 py-1 bg-green-800">Submit</button>
+                        <button onClick={codeSubmit} className="h-full hover:bg-green-700 active:text-black border rounded-lg px-2 py-1 bg-green-800">Submit</button>
                     </div>
                     {/* selecting lang and scaleton  */}
                     <select onChange={(e)=>{
@@ -165,8 +214,8 @@ export default function Page() {
                     <CodeEditorcool setCode={setCode} code={code}/>
                 </div>
                 {/* terminal section  */}
-                <div className=" h-[350px]" >
-                    <div className="text-md font-bold ml-6 py-2 flex justify-around" id="terminal">
+                <div className=" h-[350px] " >
+                    <div className="text-md font-bold bg-zinc-900 py-2 flex justify-around " id="terminal">
                         <button onClick={()=>{
                             setInputView(true); setOutputView(false); setVerdic(false);
                             }} className={`${inputView?"border-b text-blue-500":"text-white"}`}>INPUT</button>
@@ -179,7 +228,12 @@ export default function Page() {
                     </div>
                     <textarea onChange={(e)=>{setInput(e.target.value)}} className={`${inputView?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto focus:outline-none`} placeholder="write input here..."/>
                     <div className={`${outputView?"":"hidden"} bg-zinc-800 w-full h-[305px] overflow-auto`}>
-                        <OutputShow outputCode={output} /> 
+                        <div className={`${showSubmit?"":"hidden"} h-full flex flex-wrap`}>
+                            <ShowTestPass result={result} />
+                        </div>
+                        <div className={`${showSubmit?"hidden":""}`}>
+                            <OutputShow outputCode={output} /> 
+                        </div>
                     </div>
                     <div className={`${verdic?"":"hidden"} bg-zinc-800 w-full h-[305px]  p-4 overflow-auto text-red-700`}>
                         {verdicData}
@@ -188,6 +242,23 @@ export default function Page() {
             </div>
         </div>
     );
+}
+
+function ShowTestPass({result}:{result:boolean[]}){
+    if(!result.length){
+        return(
+            <div>wait........</div>
+        )
+    }
+    return(
+    <>
+        {result.map((test,index)=>{
+            return (
+                <div key={index} className={`${test?"bg-green-600":"bg-red-600"} flex flex-col justify-center border h-12 m-4 rounded-lg py-2 px-2`}>{test?`Test ${index+1} Pass`:`Test ${index+1} Fail`}</div>
+            )
+        })}
+    </>
+    )
 }
 
 

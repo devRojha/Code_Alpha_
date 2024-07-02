@@ -26,4 +26,29 @@ app.post("/run", async (req , res)=>{
     }
 })
 
+app.post("/submit" , async (req , res)=>{
+    const {code , lang="cpp" , testCases} = req.body;
+    if(code === undefined || !(code.length > 0)){
+        return res.status(200).json({success : "false" , message:"empty code"})
+    }
+    console.log(testCases)
+    const filePath = generateCodeFile(lang , code);
+    var result = [];
+    let i = 0;
+    for(i =0 ;i < testCases.length ; i++){
+        try{
+            const inputPath = generateInputFile(testCases[i]);
+            const output = await executeCode(filePath , lang , inputPath);
+            result.push(output);
+        }
+        catch(e){
+            result.push(e);
+            return res.status(500).json({success : "false" , testCase:"i+1", output: result})
+        }
+    }
+    if(i == testCases.length){
+        return res.status(200).json({success:"true", output: result});
+    }
+})
+
 app.listen(8000 , ()=>console.log("backend 2 online on 8000 "))

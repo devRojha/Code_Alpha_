@@ -2,7 +2,7 @@ const { TestCases } = require("../../db");
 
 const addtestcases = async (req, res) => {
     const userId = req.userId;
-    const { problemId, Cases } = req.body;
+    const { problemId, Cases, Result } = req.body;
 
     try {
         // Check if test cases already exist for the problemId
@@ -13,7 +13,8 @@ const addtestcases = async (req, res) => {
             await TestCases.create({
                 ProblemId: problemId,
                 AdminId: userId,
-                Cases: Cases
+                Cases: Cases,
+                Result: Result
             });
 
             return res.status(200).json({ msg: "Test cases created" });
@@ -23,7 +24,8 @@ const addtestcases = async (req, res) => {
                 { ProblemId: problemId },
                 {
                     AdminId: userId,
-                    Cases: [...testCase.Cases, ...Cases] // Merge existing and new cases
+                    Cases: [...testCase.Cases, ...Cases], // Merge existing and new cases
+                    Result: [...testCase.Result, ...Result]
                 }
             );
 

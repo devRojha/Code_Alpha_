@@ -1,19 +1,27 @@
-"use client"
+"use client";
 import axios from "axios";
-import {  useSearchParams } from "next/navigation";
-import {  useState } from "react";
-
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function Page() {
     const params = useSearchParams().toString();
     const id = params.substring(3);
     const [Cases, setCases] = useState<string[]>(Array(10).fill(""));
+    const [Result, setResult] = useState<string[]>(Array(10).fill(""));
 
-    const handleChange = (index: number, value: string) => {
+    const handleChangeTest = (index: number, value: string) => {
         setCases(prevCases => {
             const newCases = [...prevCases];
             newCases[index] = value;
             return newCases;
+        });
+    };
+
+    const handleChangeResult = (index: number, value: string) => {
+        setResult(prevResult => {
+            const newResult = [...prevResult];
+            newResult[index] = value;
+            return newResult;
         });
     };
 
@@ -23,11 +31,12 @@ export default function Page() {
                 "http://localhost:3000/api/problem/addtestcases",
                 {
                     problemId: id,
-                    Cases: Cases.filter(test => test.length > 0) // Filter out empty test cases
+                    Cases: Cases.filter(test => test.length > 0), // Filter out empty test cases
+                    Result: Result.filter(test => test.length > 0)
                 },
                 {
                     headers: {
-                        Token: localStorage.getItem("Token")
+                        Token: localStorage.getItem("Token") || ""
                     }
                 }
             );
@@ -50,13 +59,23 @@ export default function Page() {
             </button>
             <div className="flex flex-wrap">
                 {Cases.map((testCase, index) => (
-                    <textarea
+                    <div
                         key={index}
-                        placeholder={`Test Case ${index + 1}`}
-                        value={testCase}
-                        onChange={e => handleChange(index, e.target.value)}
-                        className="h-[350px] w-[440px] mb-4 text-black text-2xl focus:outline-none p-4 mx-2"
-                    />
+                        className="h-[500px] w-[440px] mb-4 text-black text-2xl focus:outline-none p-4 mx-2 flex flex-col"
+                    >
+                        <textarea
+                            placeholder={`Test Case ${index + 1}`}
+                            value={testCase}
+                            onChange={e => handleChangeTest(index, e.target.value)}
+                            className="mb-2 h-[50%] "
+                        />
+                        <textarea
+                            placeholder={`Expected Result ${index + 1}`}
+                            value={Result[index]}
+                            onChange={e => handleChangeResult(index, e.target.value)}
+                            className="h-[50%]"
+                        />
+                    </div>
                 ))}
             </div>
         </div>

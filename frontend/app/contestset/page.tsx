@@ -10,7 +10,7 @@ interface ProblemType{
     status: String,
     title: String,
     difficulty: String,
-    accept: String
+    accept: Number
 }
 
 
@@ -33,15 +33,9 @@ export default function Page() {
             }});
             const FetchProblems = response1.data.Problems;
             const UserProblemsolved = response2.data.ProblemSolved;
-            const UserProblemattempt= response2.data.ProblemAttempt;
             var Problems =[];
             for(var i = 0 ; i < FetchProblems.length ; i++){
                 var problemStatus = "NA";
-                for(var j = 0 ; j < UserProblemattempt.length ; j++){
-                    if(UserProblemattempt[j] === FetchProblems._id){
-                        problemStatus = "Attempted";
-                    }
-                }
                 for(var j = 0 ; j < UserProblemsolved.length ; j++){
                     if(UserProblemsolved[j] === FetchProblems._id){
                         problemStatus = "Solved";
@@ -50,11 +44,15 @@ export default function Page() {
                 if(problemStatus === "NA"){
                     problemStatus = "Unsolved"
                 }
+                let Accept = Math.floor(Math.random() * 101);
+                if(FetchProblems[i].TotalSubmit > 0){
+                    Accept = (FetchProblems[i].AcceptSubmit* 100)/FetchProblems[i].TotalSubmit;
+                }
                 var problem:ProblemType = {
                     id : FetchProblems[i]._id,
                     title : FetchProblems[i].Title,
                     difficulty : FetchProblems[i].Deficulty,
-                    accept: "35.6%",
+                    accept: Accept,
                     status : problemStatus
                 }
                 console.log(problem);
@@ -102,7 +100,7 @@ export default function Page() {
     }
     return (
         <div className="bg-slate-700">
-            <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 border-b overflow-y-auto pt-10">
+            <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 border-b overflow-y-auto pt-10 ">
                 {/* filter component */}
                 <div className="mb-10 px-6 flex">
                     <select onChange={(e) => setStatus(e.target.value)} className="text-white bg-slate-800 px-2 py-2 border rounded-lg focus:outline-none mr-6">
@@ -144,16 +142,16 @@ export default function Page() {
 }
 
 
-function Problem({ status, title, difficulty, accept}: ProblemType) {
+function Problem({ status, title, difficulty, accept, id}: ProblemType) {
     const router = useRouter();
     return (
         <div className="border-b shadow-sm shadow-white grid grid-cols-6 text-white mx-4">
             <div className={`col-span-1 px-4 py-6 ${status === "Solved" ? "text-green-700" : status === "Unsolved" ? "text-red-700" : "text-yellow-600"}`}>{status}</div>
             <div className="col-span-3 px-4 py-6">
-                <button onClick={() => { router.push("/problemset/problem") }}>{title}</button>
+                <button className="hover:text-blue-600" onClick={() => { router.push(`/problemset/problem?id=${id}`) }}>{title}</button>
             </div>
             <div className={`col-span-1 px-4 py-6 ${difficulty === "Easy" ? "text-green-700" : difficulty === "Hard" ? "text-red-700" : "text-yellow-600"}`}>{difficulty}</div>
-            <div className="col-span-1 px-4 py-6">{accept}</div>
+            <div className="col-span-1 px-4 py-6">{accept.toString()+` %`}</div>
         </div>
     );
 }
