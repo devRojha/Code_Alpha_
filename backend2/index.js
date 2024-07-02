@@ -43,7 +43,8 @@ app.post("/submit" , async (req , res)=>{
         }
         catch(e){
             result.push(e);
-            return res.status(500).json({success : "false" , testCase:"i+1", output: result})
+            const testCase = (i+1)
+            return res.status(500).json({success : "false" , testCase , output: result})
         }
     }
     if(i == testCases.length){

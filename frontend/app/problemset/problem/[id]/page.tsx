@@ -60,17 +60,18 @@ export default function Page() {
                     codeOutput,
                     problemid : id
                 })
-                console.log(compare.data.result);
+                // console.log(compare.data.result);
                 setResult(compare.data.result);
             }
+            setShowSubmit(true);
             setInputView(false); setOutputView(true); setVerdic(false);
         } catch (error:any) {
-            setVerdicData(error?.response?.data?.message || "");
-            console.log(error.data);
+            // console.log(error.response.data);
+            var errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1]}` || "";
+            setVerdicData(errorData);
             setErrorCompile(true);
             setInputView(false); setOutputView(false); setVerdic(true);
         }
-        setShowSubmit(true);
         router.push("#terminal");
     }
 
