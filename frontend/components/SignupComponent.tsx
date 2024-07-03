@@ -13,7 +13,7 @@ export default function SignupComponent(){
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post(`${(Admin)?"https://online-judge-mof6.onrender.com/api/auth/admin/signup":"https://online-judge-mof6.onrender.com/api/auth/user/signup"}`, {
+            const response = await axios.post(`${(Admin)?`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin/signup`:`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/signup`}`, {
                 Name,
                 Email,
                 Password

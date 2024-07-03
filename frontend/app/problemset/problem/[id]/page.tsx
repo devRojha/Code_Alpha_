@@ -38,7 +38,7 @@ export default function Page() {
         setOutput("")
         setVerdicData("")
         // geeting all testcases 
-        const response = await axios.get("https://online-judge-mof6.onrender.com/api/problem/testcases",{
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/testcases`,{
             headers:{
                 ProblemId : id
             }
@@ -47,7 +47,7 @@ export default function Page() {
         // console.log(testCases);
         try {
             //submit code and testcases for getting output
-            const response = await axios.post("http://65.2.169.42:8000/submit", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/submit`, {
                 lang,
                 code,
                 testCases
@@ -56,7 +56,7 @@ export default function Page() {
                 setErrorCompile(false);
                 const codeOutput = response.data.output;
                 //comparing code output with result
-                const compare = await axios.post("https://online-judge-mof6.onrender.com/api/problem/compareresult",{
+                const compare = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/compareresult`,{
                     codeOutput,
                     problemid : id
                 })
@@ -95,7 +95,7 @@ export default function Page() {
         setOutput("")
         setVerdicData("")
         try {
-            const response = await axios.post("http://65.2.169.42:8000/run", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/run`, {
                 lang,
                 code,
                 input
@@ -123,7 +123,7 @@ export default function Page() {
     useEffect(()=>{
         const getProblem = async ()=>{
             try{
-                const response = await axios("https://online-judge-mof6.onrender.com/api/problem/problembyid",{
+                const response = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/problembyid`,{
                     headers :{
                         Token : localStorage.getItem("Token"),
                         id : id
@@ -135,7 +135,7 @@ export default function Page() {
                     setcanEdit(true);
                 }
 
-                const userDetail = await axios("https://online-judge-mof6.onrender.com/api/userProfile",{
+                const userDetail = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile`,{
                     headers:{
                         Token : localStorage.getItem("Token")
                     }
@@ -165,7 +165,7 @@ export default function Page() {
     //code store for user
     useEffect(()=>{
         const delay = setTimeout(async()=>{
-            const response = await axios.put("https://online-judge-mof6.onrender.com/api/userProfile/update/problemcode",{
+            const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/update/problemcode`,{
                 problemId : id,
                 lang,
                 code
@@ -188,13 +188,13 @@ export default function Page() {
                         <div className={`${canEdit?"flex":"hidden"} text-lg font-normal mr-6 space-x-3`}>
                             <button onClick={()=>router.push(`/problemset/editproblem/${id}`)} className="active:border px-2 py-1 rounded-lg bg-blue-600">Edit</button>
                             <button onClick={async ()=>{
-                                await axios.delete("https://online-judge-mof6.onrender.com/api/problem/deleteproblem",{
+                                await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/deleteproblem`,{
                                     headers:{
                                         Token : localStorage.getItem("Token"),
                                         id : id
                                     }
                                 })
-                                await axios.delete("https://online-judge-mof6.onrender.com/api/problem/deletetestCases",{
+                                await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/deletetestCases`,{
                                     headers:{
                                         Token : localStorage.getItem("Token"),
                                         ProblemId : id

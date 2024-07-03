@@ -16,8 +16,8 @@ export default function Page() {
     const codeExecute = async () => {
         setOutput("")
         try {
-            console.log(process.env.COMPILER_URL);
-            const response = await axios.post("http://65.2.169.42:8000/run", {
+            console.log(process.env.NEXT_PUBLIC_COMPILER_URL);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/run`, {
                 lang,
                 code,
                 input

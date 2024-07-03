@@ -28,7 +28,7 @@ export default function Page() {
     const submitTestCases = async () => {
         try {
             const response = await axios.post(
-                "https://online-judge-mof6.onrender.com/api/problem/addtestcases",
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/addtestcases`,
                 {
                     problemId: id,
                     Cases: Cases.filter(test => test.length > 0), // Filter out empty test cases

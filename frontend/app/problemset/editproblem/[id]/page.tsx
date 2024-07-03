@@ -73,7 +73,7 @@ export default function Page(){
             </div>
             <div className="pb-10 flex">
                 <button onClick={()=>{
-                    axios.put("https://online-judge-mof6.onrender.com/api/problem/editproblem",{
+                    axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/editproblem`,{
                         id: id,
                         Title: (Title || problem?.Title),
                         Description: (Description || problem?.Description),

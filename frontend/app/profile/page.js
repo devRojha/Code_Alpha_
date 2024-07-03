@@ -22,7 +22,7 @@ export default function Page() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get("https://online-judge-mof6.onrender.com/api/userProfile", {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile`, {
                     headers: {
                         Token: localStorage.getItem("Token")
                     }
@@ -38,7 +38,7 @@ export default function Page() {
                 setHard(hardProblems);
 
                 // fetchnig problem which created by admin
-                const response1 = await axios.get("https://online-judge-mof6.onrender.com/api/problem/allproblem")
+                const response1 = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/allproblem`)
                 const filterByAdmin = response1.data.Problems?.filter(problem => problem.AdminId === response.data._id) || [];
                 const easycreate = filterByAdmin?.filter(problem => problem.Deficulty === "Easy") || [];
                 const mediumcreate = filterByAdmin?.filter(problem => problem.Deficulty === "Medium") || [];
@@ -59,7 +59,7 @@ export default function Page() {
 
     async function UpdateUser(){
         try{
-            const response = await axios.put("https://online-judge-mof6.onrender.com/api/userProfile/update",{
+            const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/update`,{
                 Name : name || "",
                 Email : email || ""
             },{
@@ -78,7 +78,7 @@ export default function Page() {
     }
     async function DeleteUser(){
         try{
-            const response = await axios.delete("https://online-judge-mof6.onrender.com/api/userProfile/delete",{
+            const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/delete`,{
                 headers:{
                     Token : localStorage.getItem("Token")
                 }
@@ -192,7 +192,7 @@ function Problems({Title , _id}){
     const router = useRouter();
     return (
         <button className="hover:text-blue-600 overflow-x-auto" onClick={()=>{
-            router.push(`/problemset/problem?id=${_id}`)
+            router.push(`/problemset/problem/${_id}`)
         }}>{Title}</button>
     )
 }

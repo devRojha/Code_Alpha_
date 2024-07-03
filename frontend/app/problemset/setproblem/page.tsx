@@ -40,7 +40,7 @@ export default function Page(){
             </div>
             <div className="pb-10">
                 <button onClick={()=>{
-                    axios.post("https://online-judge-mof6.onrender.com/api/problem/setproblem",{
+                    axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/setproblem`,{
                         Title,
                         Description,
                         Deficulty,
