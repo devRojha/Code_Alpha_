@@ -1,9 +1,11 @@
 "use client"
 
 import ProblemLoader from "@/components/ProblemLoader";
+import { adminState, logedinState } from "@/state/atom";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 interface ProblemType{
     id: Number,
@@ -17,12 +19,38 @@ interface ProblemType{
 export default function Page() {
     var it = 0;
     const router = useRouter();
-    const [Admin, setAdmin] = useState<string>("false");
+    // const [Admin, setAdmin] = useState<string>("false");
     const [status, setStatus] = useState<string>("All");
     const [difficulty, setDifficulty] = useState<string>("All");
     const [searchProb, setSearchProb] = useState<string>("");
     const [filterProblem, setFilterProblem] = useState<ProblemType[]>([]);
     const [AllProblem, setAllProblem] = useState<ProblemType[]>([])
+    const Admin = useRecoilValue(adminState);
+    const logedIn = useRecoilValue(logedinState);
+
+    useEffect(() => {
+        const token = localStorage.getItem("Token") || "";
+        if(!token){
+            router.push("/")
+            // alert("Loged in failed")
+        }
+        let filteredProblems = AllProblem;
+        if (searchProb) {
+            filteredProblems = filteredProblems.filter(problem =>
+                problem.title.toLowerCase().includes(searchProb.toLowerCase())
+            );
+        }
+
+        if (status !== "All") {
+            filteredProblems = filteredProblems.filter(problem => problem.status === status);
+        }
+
+        if (difficulty !== "All") {
+            filteredProblems = filteredProblems.filter(problem => problem.difficulty === difficulty);
+        }
+
+        setFilterProblem(filteredProblems);
+    }, [status, difficulty, searchProb, Admin, AllProblem]);
 
     useEffect(()=>{
         async function fetchdata (){
@@ -63,36 +91,6 @@ export default function Page() {
         fetchdata();
     },[])
 
-    useEffect(() => {
-        const token = localStorage.getItem("Token");
-        const admin = localStorage.getItem("Admin");
-        if(admin === "true"){
-            setAdmin("true");
-        }
-        else{
-            setAdmin("false");
-        }
-        if(token == null){
-            router.push("/")
-        }
-        let filteredProblems = AllProblem;
-        if (searchProb) {
-            filteredProblems = filteredProblems.filter(problem =>
-                problem.title.toLowerCase().includes(searchProb.toLowerCase())
-            );
-        }
-
-        if (status !== "All") {
-            filteredProblems = filteredProblems.filter(problem => problem.status === status);
-        }
-
-        if (difficulty !== "All") {
-            filteredProblems = filteredProblems.filter(problem => problem.difficulty === difficulty);
-        }
-
-        setFilterProblem(filteredProblems);
-    }, [status, difficulty, searchProb, Admin, AllProblem]);
-
     if(filterProblem.length == 0){
         return (
             <ProblemLoader />
@@ -116,7 +114,7 @@ export default function Page() {
                         <option value={"Hard"} className="text-red-700">Hard</option>
                     </select>
                     <input onChange={(e) => setSearchProb(e.target.value)} className="bg-transparent border focus:outline-none text-white px-2 py-2 rounded-lg w-[250px]" placeholder="Search..." />
-                    <button onClick={()=>{router.push("/problemset/setproblem")}} className={`${(Admin === "true") ? "flex" : "hidden"} ml-4 border text-white px-4 py-2 rounded-lg`}>Add Problem +</button>
+                    <button onClick={()=>{router.push("/problemset/setproblem")}} className={`${(Admin) ? "flex" : "hidden"} ml-4 border text-white px-4 py-2 rounded-lg`}>Add Problem +</button>
                 </div>
                 {/* title */}
                 <div className="border-b grid grid-cols-6 text-slate-400 shadow-lg shadow-slate-600 mb-10">

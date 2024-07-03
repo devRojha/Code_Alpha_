@@ -1,6 +1,8 @@
+import { adminState, logedinState } from "@/state/atom";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 
 
 
@@ -10,6 +12,8 @@ export default function SignupComponent(){
     const [Name, setName] = useState<string>("");
     const [Password, setPassword] = useState<string>("");
     const [Admin, setAdmin] = useState<boolean>(false);
+    const setAdminAtom = useSetRecoilState(adminState);
+    const setLoginAtom = useSetRecoilState(logedinState);
 
     const handleSubmit = async () => {
         try {
@@ -21,15 +25,19 @@ export default function SignupComponent(){
             console.log(response.data)
             if (response.data.Token) {
                 localStorage.setItem("Token", response.data.Token);
+                setLoginAtom(true);
                 if(Admin == true){
                     localStorage.setItem("Admin", "true");
+                    setAdminAtom(true);
                 }
                 else{
                     localStorage.setItem("Admin", "false");
+                    setAdminAtom(false);
                 }
                 router.push("/")
             }
         } catch (error) {
+            setLoginAtom(false);
             console.error("Signin failed", error);
             alert("Signin Error")
         }

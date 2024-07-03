@@ -16,12 +16,13 @@
     "react": "^18",
     "react-ace": "^12.0.0",
     "react-dom": "^18",
-    "react-simple-code-editor": "^0.13.1"
+    "react-simple-code-editor": "^0.13.1",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/prismjs": "^1.26.4",
-    "@types/react": "^18",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",

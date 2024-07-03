@@ -1,8 +1,10 @@
 "use client"
 
+import { adminState } from "@/state/atom";
 import axios from "axios";
 import {  useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil";
 
 interface ProblemType{
     _id: String,
@@ -21,6 +23,7 @@ export default function Page(){
     const [Deficulty , setDeficulty] = useState<string>("");
     const [Constraint , setConstraint] = useState<string>("");
     const [problem , setProblem] = useState<ProblemType>();
+    const admin = useRecoilValue(adminState);
     useEffect(()=>{
         const getProblem = async ()=>{
             try{
@@ -73,17 +76,23 @@ export default function Page(){
             </div>
             <div className="pb-10 flex">
                 <button onClick={()=>{
-                    axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/editproblem`,{
-                        id: id,
-                        Title: (Title || problem?.Title),
-                        Description: (Description || problem?.Description),
-                        Deficulty : (Deficulty || problem?.Deficulty),
-                        Constraint : (Constraint || problem?.Constraint),
-                    }, {
-                        headers: {
-                            Token: localStorage.getItem("Token")
-                        }
-                    })
+                    if(admin === false){
+                        router.push("/");
+                        alert("Not an admin");
+                    }
+                    else{
+                        axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/editproblem`,{
+                            id: id,
+                            Title: (Title || problem?.Title),
+                            Description: (Description || problem?.Description),
+                            Deficulty : (Deficulty || problem?.Deficulty),
+                            Constraint : (Constraint || problem?.Constraint),
+                        }, {
+                            headers: {
+                                Token: localStorage.getItem("Token")
+                            }
+                        })
+                    }
                 }} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800">Edit</button>
                 <button onClick={()=>router.push(`/problemset/addTestCases/${id}`)} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800 ml-6">Add Test cases</button>
             </div>

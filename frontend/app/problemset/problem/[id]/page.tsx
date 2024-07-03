@@ -3,9 +3,11 @@
 
 import CodeEditorcool from "@/components/CodeEditorcool";
 import OutputShow from "@/components/OutputShow";
+import { logedinState } from "@/state/atom";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 
 interface ProblemType{
@@ -33,126 +35,141 @@ export default function Page() {
     const [verdic , setVerdic] = useState<boolean>(false);
     const [result , setResult] = useState<boolean[]>([]);
     const [showSubmit , setShowSubmit] = useState<boolean>(false);
+    const loginAtom = useRecoilValue(logedinState);
 
     const codeSubmit = async()=>{
-        setOutput("")
-        setVerdicData("")
-        // geeting all testcases 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/testcases`,{
-            headers:{
-                ProblemId : id
-            }
-        })
-        const testCases = response.data.testCase;
-        // console.log(testCases);
-        try {
-            //submit code and testcases for getting output
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/submit`, {
-                lang,
-                code,
-                testCases
-            });
-            if (response.data.success === "true") {
-                setErrorCompile(false);
-                const codeOutput = response.data.output;
-                //comparing code output with result
-                const compare = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/compareresult`,{
-                    codeOutput,
-                    problemid : id
-                })
-                // console.log(compare.data.result);
-                setResult(compare.data.result);
-            }
-            setShowSubmit(true);
-            setInputView(false); setOutputView(true); setVerdic(false);
-        } catch (error:any) {
-            // console.log(error.response.data);
-            var errorData = "Somthing Wrong......";
-            if(lang == "cpp"){
-                if(error.response.data.testCase){
-                    errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1]}` || "";
+        if(loginAtom){
+            setOutput("")
+            setVerdicData("")
+            // geeting all testcases 
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/testcases`,{
+                headers:{
+                    ProblemId : id
                 }
-                else{
-                    errorData = error.response.data.message;
+            })
+            const testCases = response.data.testCase;
+            // console.log(testCases);
+            try {
+                //submit code and testcases for getting output
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/submit`, {
+                    lang,
+                    code,
+                    testCases
+                });
+                if (response.data.success === "true") {
+                    setErrorCompile(false);
+                    const codeOutput = response.data.output;
+                    //comparing code output with result
+                    const compare = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/compareresult`,{
+                        codeOutput,
+                        problemid : id
+                    })
+                    // console.log(compare.data.result);
+                    setResult(compare.data.result);
                 }
+                setShowSubmit(true);
+                setInputView(false); setOutputView(true); setVerdic(false);
+            } catch (error:any) {
+                // console.log(error.response.data);
+                var errorData = "Somthing Wrong......";
+                if(lang == "cpp"){
+                    if(error.response.data.testCase){
+                        errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1]}` || "";
+                    }
+                    else{
+                        errorData = error.response.data.message;
+                    }
+                }
+                else if(lang == "java"){
+                    if(error.response.data.testCase){
+                        errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1].stderr}`;
+                    }
+                    else{
+                        errorData = error.response.data.message;
+                    }
+                }
+                setVerdicData(errorData);
+                setErrorCompile(true);
+                setInputView(false); setOutputView(false); setVerdic(true);
             }
-            else if(lang == "java"){
-                if(error.response.data.testCase){
-                    errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1].stderr}`;
-                }
-                else{
-                    errorData = error.response.data.message;
-                }
-            }
-            setVerdicData(errorData);
-            setErrorCompile(true);
-            setInputView(false); setOutputView(false); setVerdic(true);
+            router.push("#terminal");
         }
-        router.push("#terminal");
+        else{
+            router.push("/");
+            alert("you are not log in");
+        }
     }
 
     const codeExecute = async () => {
-        setOutput("")
-        setVerdicData("")
-        try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/run`, {
-                lang,
-                code,
-                input
-            });
-            if (response.data.success === "true") {
-                setErrorCompile(false);
-                setOutput(response.data.output);
+        if(loginAtom){
+            setOutput("")
+            setVerdicData("")
+            try {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_COMPILER_URL}/run`, {
+                    lang,
+                    code,
+                    input
+                });
+                if (response.data.success === "true") {
+                    setErrorCompile(false);
+                    setOutput(response.data.output);
+                }
+                setInputView(false); setOutputView(true); setVerdic(false);
+            } catch (error:any) {
+                if(lang == "cpp"){
+                    setVerdicData(error?.response?.data?.message || "");
+                }
+                else if(lang == "java"){
+                    setVerdicData(error.response.data.message.stderr || error.response.data.message);
+                }
+                // console.log(error.data);
+                setErrorCompile(true);
+                setInputView(false); setOutputView(false); setVerdic(true);
             }
-            setInputView(false); setOutputView(true); setVerdic(false);
-        } catch (error:any) {
-            if(lang == "cpp"){
-                setVerdicData(error?.response?.data?.message || "");
-            }
-            else if(lang == "java"){
-                setVerdicData(error.response.data.message.stderr || error.response.data.message);
-            }
-            // console.log(error.data);
-            setErrorCompile(true);
-            setInputView(false); setOutputView(false); setVerdic(true);
+            setShowSubmit(false);
+            router.push("#terminal")
         }
-        setShowSubmit(false);
-        router.push("#terminal")
+        else{
+            router.push("/");
+            alert("you are not log in");
+        }
     }
 
     useEffect(()=>{
         const getProblem = async ()=>{
             try{
-                const response = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/problembyid`,{
-                    headers :{
-                        Token : localStorage.getItem("Token"),
-                        id : id
+                if(loginAtom){
+                    const response = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/problembyid`,{
+                        headers :{
+                            Token : localStorage.getItem("Token"),
+                            id : id
+                        }
+                    })
+                    setProblem(response.data.problem);
+                    const Admin = localStorage.getItem("Admin")
+                    if(response.data.Edit === "true" && Admin === "true"){
+                        setcanEdit(true);
                     }
-                })
-                setProblem(response.data.problem);
-                const Admin = localStorage.getItem("Admin")
-                if(response.data.Edit === "true" && Admin === "true"){
-                    setcanEdit(true);
-                }
-
-                const userDetail = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile`,{
-                    headers:{
-                        Token : localStorage.getItem("Token")
+    
+                    const userDetail = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile`,{
+                        headers:{
+                            Token : localStorage.getItem("Token")
+                        }
+                    })
+                    const problemCode = userDetail.data?.ProblemCode || [];
+                    let flag = true;
+                    let it = -1;
+                    for(let i =0 ; i < problemCode.length ;i++){
+                        if(problemCode[i].problemId === id){
+                            setCode(problemCode[i].code);
+                            it = i;
+                            flag = false;
+                            break;
+                        }
                     }
-                })
-                const problemCode = userDetail.data?.ProblemCode || [];
-                let flag = true;
-                let it = -1;
-                for(let i =0 ; i < problemCode.length ;i++){
-                    if(problemCode[i].problemId === id){
-                        setCode(problemCode[i].code);
-                        it = i;
-                        flag = false;
-                        break;
+                    if(flag || (problemCode[it].code.length == 0)){
+                        setCode(`\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n\n  cout<<"ved"<<endl;\n\n  return 0;\n}`);
                     }
-                }
-                if(flag || (problemCode[it].code.length == 0)){
-                    setCode(`\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n\n  cout<<"ved"<<endl;\n\n  return 0;\n}`);
                 }
             }
             catch(e){
@@ -165,15 +182,22 @@ export default function Page() {
     //code store for user
     useEffect(()=>{
         const delay = setTimeout(async()=>{
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/update/problemcode`,{
-                problemId : id,
-                lang,
-                code
-            },{
-                headers:{
-                    Token : localStorage.getItem("Token")
+            if(loginAtom){
+                try{
+                    const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/update/problemcode`,{
+                        problemId : id,
+                        lang,
+                        code
+                    },{
+                        headers:{
+                            Token : localStorage.getItem("Token")
+                        }
+                    });
                 }
-            });
+                catch(e){
+                    console.log(e);
+                }
+            }
         }, 2000);
         return ()=> clearTimeout(delay);
     },[code])

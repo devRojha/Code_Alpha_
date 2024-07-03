@@ -1,17 +1,26 @@
 "use client"
 
+import { adminState } from "@/state/atom";
 import axios from "axios";
-import { useState } from "react"
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil";
 
 
 
 export default function Page(){
+    const router = useRouter();
     const [Title , setTitle] = useState<string>("");
     const [Description , setDescription] = useState<string>("");
     const [Deficulty , setDeficulty] = useState<string>("Easy");
     const [Constraint , setConstraint] = useState<string>("");
-
-
+    const admin = useRecoilValue(adminState);
+    useEffect(()=>{
+        const token = localStorage.getItem("Token");
+        if(!token){
+            router.push("/problemset");
+        }
+    },[])
 
     return (
         <div className="bg-zinc-900 pt-8 text-white px-8 border-b">
@@ -40,16 +49,28 @@ export default function Page(){
             </div>
             <div className="pb-10">
                 <button onClick={()=>{
-                    axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/setproblem`,{
-                        Title,
-                        Description,
-                        Deficulty,
-                        Constraint
-                    }, {
-                        headers: {
-                            Token: localStorage.getItem("Token")
+                    if(admin === false){
+                        router.push("/");
+                        alert("Not an admin");
+                    }
+                    else{
+                        try{
+                            axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/setproblem`,{
+                                Title,
+                                Description,
+                                Deficulty,
+                                Constraint
+                            }, {
+                                headers: {
+                                    Token: localStorage.getItem("Token")
+                                }
+                            })
+                            alert("Problem Added");
                         }
-                    })
+                        catch(e){
+                            console.log(e);
+                        }
+                    }
                 }} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800">ADD</button>
             </div>
         </div>

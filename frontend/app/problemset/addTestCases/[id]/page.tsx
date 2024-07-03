@@ -1,13 +1,17 @@
 "use client";
+import { adminState } from "@/state/atom";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 
 export default function Page() {
+    const router = useRouter();
     const param = useParams();
     const id = param.id;
     const [Cases, setCases] = useState<string[]>(Array(10).fill(""));
     const [Result, setResult] = useState<string[]>(Array(10).fill(""));
+    const admin = useRecoilValue(adminState);
 
     const handleChangeTest = (index: number, value: string) => {
         setCases(prevCases => {
@@ -27,21 +31,27 @@ export default function Page() {
 
     const submitTestCases = async () => {
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/addtestcases`,
-                {
-                    problemId: id,
-                    Cases: Cases.filter(test => test.length > 0), // Filter out empty test cases
-                    Result: Result.filter(test => test.length > 0)
-                },
-                {
-                    headers: {
-                        Token: localStorage.getItem("Token") || ""
+            if(admin === false){
+                router.push("/");
+                alert("Not an admin");
+            }
+            else{
+                const response = await axios.post(
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/addtestcases`,
+                    {
+                        problemId: id,
+                        Cases: Cases.filter(test => test.length > 0), // Filter out empty test cases
+                        Result: Result.filter(test => test.length > 0)
+                    },
+                    {
+                        headers: {
+                            Token: localStorage.getItem("Token") || ""
+                        }
                     }
+                );
+                if (response.data.msg) {
+                    alert(response.data.msg);
                 }
-            );
-            if (response.data.msg) {
-                alert(response.data.msg);
             }
         } catch (e) {
             console.error("Error:", e);

@@ -1,8 +1,10 @@
 "use client"
 
+import { adminState, logedinState } from "@/state/atom";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 
 
 
@@ -10,6 +12,9 @@ export default function SigninComponent(){
     const [Email, setEmail] = useState<string>("");
     const [Password, setPassword] = useState<string>("");
     const [Admin, setAdmin] = useState<Boolean>(false);
+    const setAdminAtom = useSetRecoilState(adminState);
+    const setLoginAtom = useSetRecoilState(logedinState);
+
     const handleSubmit = async () => {
         try {
             const response = await axios.post(`${(Admin)?`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin/signin`:`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/signin`}`, {
@@ -19,15 +24,19 @@ export default function SigninComponent(){
             // console.log(response.data)
             if (response.data.Token) {
                 localStorage.setItem("Token", response.data.Token);
+                setLoginAtom(true);
                 if(Admin === true){
                     localStorage.setItem("Admin", "true");
+                    setAdminAtom(true);
                 }
                 else{
                     localStorage.setItem("Admin", "false");
+                    setAdminAtom(false);
                 }
                 router.push("/")
             }
         } catch (error) {
+            setLoginAtom(false);
             console.error("Signin failed", error);
             alert("Signin Error")
         }

@@ -1,8 +1,10 @@
 "use client"
 
+import { adminState } from "@/state/atom";
 import axios from "axios"
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
+import { useRecoilValue } from "recoil";
 
 export default function Page() {
     const router = useRouter();
@@ -17,7 +19,9 @@ export default function Page() {
     const [hardCreate, setHardCreate] = useState([]);
     const [mediumCreate, setMediumCreate] = useState([]);
     const [user, setUser] = useState({});
-    const [admin , setAdmin] = useState(false);
+    // const [admin , setAdmin] = useState(false);
+    const adminatom = useRecoilValue(adminState);
+
 
     useEffect(() => {
         async function fetchData() {
@@ -37,7 +41,7 @@ export default function Page() {
                 setMedium(mediumProblems);
                 setHard(hardProblems);
 
-                // fetchnig problem which created by admin
+                // fetchnig problem which created by adminatom
                 const response1 = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/allproblem`)
                 const filterByAdmin = response1.data.Problems?.filter(problem => problem.AdminId === response.data._id) || [];
                 const easycreate = filterByAdmin?.filter(problem => problem.Deficulty === "Easy") || [];
@@ -46,9 +50,6 @@ export default function Page() {
                 setEasyCreate(easycreate);
                 setMediumCreate(mediumcreate);
                 setHardCreate(hardcreate);
-                if(localStorage.getItem("Admin") && localStorage.getItem("Admin") === "true"){
-                    setAdmin(true);
-                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -159,7 +160,7 @@ export default function Page() {
                     </div>
                 </div>
                 {/* problem make */}
-                <div className={`w-full ${admin?"":"hidden"}`}>
+                <div className={`w-full ${adminatom?"":"hidden"}`}>
                     <label className="font-bold">Problem created :</label>
                     <div className="grid grid-cols-3 mt-8 shadow-lg shadow-white border-b h-[500px]">
                         <div className="border-r border-l flex flex-col items-center overflow-y-auto my-2">
