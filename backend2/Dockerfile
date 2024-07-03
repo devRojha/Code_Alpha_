@@ -1,18 +1,17 @@
-
 # Use an official Node.js runtime as a parent image
 FROM node:20
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Install dependencies including OpenJDK
+# Install dependencies including OpenJDK and Python 3
 RUN apt-get update && apt-get install -y \
     g++ \
     default-jdk \
-    python3 \ 
+    python3 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*;
-#  openjdk-11-jdk \
+
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
@@ -26,4 +25,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application
-CMD ["npm", "run" , "dev"]
+CMD ["npm", "run", "dev"]

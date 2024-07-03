@@ -47,7 +47,7 @@ export default function Page() {
         // console.log(testCases);
         try {
             //submit code and testcases for getting output
-            const response = await axios.post("http://localhost:8000/submit", {
+            const response = await axios.post("http://65.2.169.42:8000/submit", {
                 lang,
                 code,
                 testCases
@@ -95,7 +95,7 @@ export default function Page() {
         setOutput("")
         setVerdicData("")
         try {
-            const response = await axios.post("http://localhost:8000/run", {
+            const response = await axios.post("http://65.2.169.42:8000/run", {
                 lang,
                 code,
                 input
