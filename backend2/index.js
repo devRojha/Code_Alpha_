@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended:true}));
 app.post("/run", async (req , res)=>{
     const { code, lang="cpp", input } = req.body;
     if(code === undefined || !(code.length > 0)){
-        return res.json({success : "false" , message:"empty code"})
+        return res.status(404).json({success : "false" , message:"empty code"})
     }
     try{
         const filePath = generateCodeFile(lang , code);
@@ -29,9 +29,9 @@ app.post("/run", async (req , res)=>{
 app.post("/submit" , async (req , res)=>{
     const {code , lang="cpp" , testCases} = req.body;
     if(code === undefined || !(code.length > 0)){
-        return res.status(200).json({success : "false" , message:"empty code"})
+        return res.status(404).json({success : "false" , message:"empty code"})
     }
-    console.log(testCases)
+    // console.log(testCases)
     const filePath = generateCodeFile(lang , code);
     var result = [];
     let i = 0;
@@ -43,7 +43,7 @@ app.post("/submit" , async (req , res)=>{
         }
         catch(e){
             result.push(e);
-            const testCase = (i+1)
+            const testCase = (i+1);
             return res.status(500).json({success : "false" , testCase , output: result})
         }
     }

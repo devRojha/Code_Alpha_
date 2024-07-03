@@ -44,7 +44,7 @@ export default function Page() {
             }
         })
         const testCases = response.data.testCase;
-        console.log(testCases);
+        // console.log(testCases);
         try {
             //submit code and testcases for getting output
             const response = await axios.post("http://localhost:8000/submit", {
@@ -67,7 +67,23 @@ export default function Page() {
             setInputView(false); setOutputView(true); setVerdic(false);
         } catch (error:any) {
             // console.log(error.response.data);
-            var errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1]}` || "";
+            var errorData = "Somthing Wrong......";
+            if(lang == "cpp"){
+                if(error.response.data.testCase){
+                    errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1]}` || "";
+                }
+                else{
+                    errorData = error.response.data.message;
+                }
+            }
+            else if(lang == "java"){
+                if(error.response.data.testCase){
+                    errorData = `Text case: ${error.response.data.testCase} \n${error.response.data.output[(error.response.data.testCase)-1].stderr}`;
+                }
+                else{
+                    errorData = error.response.data.message;
+                }
+            }
             setVerdicData(errorData);
             setErrorCompile(true);
             setInputView(false); setOutputView(false); setVerdic(true);
@@ -90,8 +106,13 @@ export default function Page() {
             }
             setInputView(false); setOutputView(true); setVerdic(false);
         } catch (error:any) {
-            setVerdicData(error?.response?.data?.message || "");
-            console.log(error.data);
+            if(lang == "cpp"){
+                setVerdicData(error?.response?.data?.message || "");
+            }
+            else if(lang == "java"){
+                setVerdicData(error.response.data.message.stderr || error.response.data.message);
+            }
+            // console.log(error.data);
             setErrorCompile(true);
             setInputView(false); setOutputView(false); setVerdic(true);
         }
@@ -131,7 +152,7 @@ export default function Page() {
                     }
                 }
                 if(flag || (problemCode[it].code.length == 0)){
-                    setCode(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"ved"<<endl;\n\n  return 0;\n}`);
+                    setCode(`\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n\n  cout<<"ved"<<endl;\n\n  return 0;\n}`);
                 }
             }
             catch(e){
@@ -203,7 +224,7 @@ export default function Page() {
                             setCode(`\nimport java.util.Scanner;\n\n//Make the main class Main as it is\npublic class Main {\n   public static void main(String[] args) {\n      Scanner scanner = new Scanner(System.in);\n\n       System.out.println("Hello World");\n\n      // Close the scanner to release resources\n     scanner.close();\n  }\n}`);
                         }
                         else if(e.target.value === "cpp"){
-                            setCode(`\n#include <iostream>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
+                            setCode(`\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n\n  cout<<"hii"<<endl;\n\n  return 0;\n}`);
                         }
                         
                         }} className="border px-2 py-1 rounded-lg bg-transparent focus:outline-none">
@@ -212,11 +233,11 @@ export default function Page() {
                         {/* <option value={"python"}>PYTHON</option> */}
                     </select>
                 </div>
-                <div className="bg-black focus:outline-none border-b  h-[700px]">
+                <div  className="bg-black focus:outline-none border-b  h-[700px]">
                     <CodeEditorcool setCode={setCode} code={code}/>
                 </div>
                 {/* terminal section  */}
-                <div className=" h-[350px] " >
+                <div className=" h-[350px]"  >
                     <div className="text-md font-bold bg-zinc-900 py-2 flex justify-around " id="terminal">
                         <button onClick={()=>{
                             setInputView(true); setOutputView(false); setVerdic(false);
