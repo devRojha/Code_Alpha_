@@ -12,7 +12,7 @@ export default function SigninComponent(){
     const [Admin, setAdmin] = useState<Boolean>(false);
     const handleSubmit = async () => {
         try {
-            const response = await axios.post(`${(Admin)?"http://localhost:3000/api/auth/admin/signin":"http://localhost:3000/api/auth/user/signin"}`, {
+            const response = await axios.post(`${(Admin)?"https://online-judge-mof6.onrender.com/api/auth/admin/signin":"https://online-judge-mof6.onrender.com/api/auth/user/signin"}`, {
                 Email,
                 Password
             });

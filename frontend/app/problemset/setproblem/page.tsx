@@ -32,7 +32,7 @@ export default function Page(){
                 <label className="text-2xl max-md:text-lg">Set Description</label>
                 <textarea onChange={(e)=>{
                     setDescription(e.target.value)
-                }} className="ml-8 max-md:mx-0 max-md:my-4 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%]  max-md:w-[95%] h-[300px] focus:outline-none" placeholder="Type Description here..."/>
+                }}  className="ml-8 max-md:mx-0 max-md:my-4 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%]  max-md:w-[95%] h-[300px] focus:outline-none" placeholder="Type Description here..."/>
             </div>
             <div className="flex mb-10 max-md:flex-col">
                 <label className="text-2xl max-md:text-lg">Set Constraint</label>
@@ -40,7 +40,7 @@ export default function Page(){
             </div>
             <div className="pb-10">
                 <button onClick={()=>{
-                    axios.post("http://localhost:3000/api/problem/setproblem",{
+                    axios.post("https://online-judge-mof6.onrender.com/api/problem/setproblem",{
                         Title,
                         Description,
                         Deficulty,

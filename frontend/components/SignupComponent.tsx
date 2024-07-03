@@ -13,7 +13,7 @@ export default function SignupComponent(){
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post(`${(Admin)?"http://localhost:3000/api/auth/admin/signup":"http://localhost:3000/api/auth/user/signup"}`, {
+            const response = await axios.post(`${(Admin)?"https://online-judge-mof6.onrender.com/api/auth/admin/signup":"https://online-judge-mof6.onrender.com/api/auth/user/signup"}`, {
                 Name,
                 Email,
                 Password

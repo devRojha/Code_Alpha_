@@ -24,7 +24,7 @@ export default function Page(){
     useEffect(()=>{
         const getProblem = async ()=>{
             try{
-                const response = await axios("http://localhost:3000/api/problem/problembyid",{
+                const response = await axios("https://online-judge-mof6.onrender.com/api/problem/problembyid",{
                     headers :{
                         Token : localStorage.getItem("Token"),
                         id : id
@@ -73,7 +73,7 @@ export default function Page(){
             </div>
             <div className="pb-10 flex">
                 <button onClick={()=>{
-                    axios.put("http://localhost:3000/api/problem/editproblem",{
+                    axios.put("https://online-judge-mof6.onrender.com/api/problem/editproblem",{
                         id: id,
                         Title: (Title || problem?.Title),
                         Description: (Description || problem?.Description),

@@ -26,8 +26,8 @@ export default function Page() {
 
     useEffect(()=>{
         async function fetchdata (){
-            const response1 = await axios.get("http://localhost:3000/api/problem/allproblem")
-            const response2 = await axios.get("http://localhost:3000/api/user/problemstatus", {
+            const response1 = await axios.get("https://online-judge-mof6.onrender.com/api/problem/allproblem")
+            const response2 = await axios.get("https://online-judge-mof6.onrender.com/api/user/problemstatus", {
                 headers: {
                 Token: localStorage.getItem("Token") 
             }});
