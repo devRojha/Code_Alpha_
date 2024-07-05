@@ -9,7 +9,7 @@ app.use(express.urlencoded({extended:true}));
 app.use("/api", mainRouter);
 
 app.get("/", (req, res)=>{
-    res.status(200).json({msg:"allright"})
+    res.status(200).json({messege:"Backend working well"})
 })
 
 
