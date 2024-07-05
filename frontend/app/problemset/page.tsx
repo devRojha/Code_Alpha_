@@ -63,15 +63,14 @@ export default function Page() {
             const UserProblemsolved = response2.data.ProblemSolved;
             var Problems =[];
             for(var i = 0 ; i < FetchProblems.length ; i++){
-                var problemStatus = "NA";
+                var problemStatus = "Unsolved";
                 for(var j = 0 ; j < UserProblemsolved.length ; j++){
-                    if(UserProblemsolved[j] === FetchProblems._id){
+                    if(UserProblemsolved[j] === FetchProblems[i]._id){
                         problemStatus = "Solved";
+                        break;
                     }
                 }
-                if(problemStatus === "NA"){
-                    problemStatus = "Unsolved"
-                }
+
                 let Accept = Math.floor(Math.random() * 101);
                 if(FetchProblems[i].TotalSubmit > 0){
                     Accept = (FetchProblems[i].AcceptSubmit* 100)/FetchProblems[i].TotalSubmit;

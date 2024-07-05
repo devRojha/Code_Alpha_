@@ -5,9 +5,20 @@ const ProblemSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    Topic:{
+        type: [{type: String}],
+        default:[]
+    },
+    Company:{
+        type: [{type: String}],
+        default:[]
+    },
     Description: {
         type: String,
         required: true
+    },
+    Example:{
+        type: String,
     },
     Deficulty: {
         type: String, 

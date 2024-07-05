@@ -12,6 +12,9 @@ interface ProblemType{
     Deficulty: String,
     Description: String,
     Constraint : String,
+    Example: String,
+    Topic: [String],
+    Company: [String],
     AdminId: String,
 }
 export default function Page(){
@@ -23,11 +26,14 @@ export default function Page(){
     const [Deficulty , setDeficulty] = useState<string>("");
     const [Constraint , setConstraint] = useState<string>("");
     const [problem , setProblem] = useState<ProblemType>();
+    const [Example , setExample] = useState<string>("");
+    const [Company , setCompany] = useState<string>("");
+    const [Topic , setTopic] = useState<string>("");
     const admin = useRecoilValue(adminState);
     useEffect(()=>{
         const getProblem = async ()=>{
             try{
-                const response = await axios("https://online-judge-mof6.onrender.com/api/problem/problembyid",{
+                const response = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/problembyid`,{
                     headers :{
                         Token : localStorage.getItem("Token"),
                         id : id
@@ -74,6 +80,18 @@ export default function Page(){
                 <label className="text-2xl max-md:text-lg">Set Constraint</label>
                 <textarea onChange={(e)=>{setConstraint(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] h-[300px] focus:outline-none" placeholder={`${problem?.Constraint}`}/>
             </div>
+            <div className="flex mb-10 max-md:flex-col">
+                <label className="text-2xl max-md:text-lg">Set Example</label>
+                <textarea onChange={(e)=>{setExample(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] h-[300px] focus:outline-none" placeholder={`${problem?.Example}`}/>
+            </div>
+            <div className="flex mb-10 max-md:flex-col">
+                <label className="text-2xl max-md:text-lg">Set Topic</label>
+                <input onChange={(e)=>{setTopic(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] focus:outline-none" placeholder={`${problem?.Topic}`}/>
+            </div>
+            <div className="flex mb-10 max-md:flex-col">
+                <label className="text-2xl max-md:text-lg">Set Company</label>
+                <input onChange={(e)=>{setCompany(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] focus:outline-none" placeholder={`${problem?.Company}`}/>
+            </div>
             <div className="pb-10 flex">
                 <button onClick={()=>{
                     if(admin === false){
@@ -87,6 +105,9 @@ export default function Page(){
                             Description: (Description || problem?.Description),
                             Deficulty : (Deficulty || problem?.Deficulty),
                             Constraint : (Constraint || problem?.Constraint),
+                            Example : (Example || problem?.Example), 
+                            Company : (Company || problem?.Company.join(", ")),
+                            Topic : (Topic || problem?.Topic.join(", ")),
                         }, {
                             headers: {
                                 Token: localStorage.getItem("Token")

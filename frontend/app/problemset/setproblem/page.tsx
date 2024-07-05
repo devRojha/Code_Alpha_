@@ -14,6 +14,9 @@ export default function Page(){
     const [Description , setDescription] = useState<string>("");
     const [Deficulty , setDeficulty] = useState<string>("Easy");
     const [Constraint , setConstraint] = useState<string>("");
+    const [Example , setExample] = useState<string>("");
+    const [Company , setCompany] = useState<string>("");
+    const [Topic , setTopic] = useState<string>("");
     const admin = useRecoilValue(adminState);
     useEffect(()=>{
         const token = localStorage.getItem("Token");
@@ -47,6 +50,18 @@ export default function Page(){
                 <label className="text-2xl max-md:text-lg">Set Constraint</label>
                 <textarea onChange={(e)=>{setConstraint(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] h-[300px] focus:outline-none" placeholder="Type constraint here..."/>
             </div>
+            <div className="flex mb-10 max-md:flex-col">
+                <label className="text-2xl max-md:text-lg">Set Example</label>
+                <textarea onChange={(e)=>{setExample(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] h-[300px] focus:outline-none" placeholder="Type constraint here..."/>
+            </div>
+            <div className="flex mb-10 max-md:flex-col">
+                <label className="text-2xl max-md:text-lg">Set Topic</label>
+                <input onChange={(e)=>{setTopic(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] focus:outline-none" placeholder="Type constraint here..."/>
+            </div>
+            <div className="flex mb-10 max-md:flex-col">
+                <label className="text-2xl max-md:text-lg">Set Company</label>
+                <input onChange={(e)=>{setCompany(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] focus:outline-none" placeholder="Type constraint here..."/>
+            </div>
             <div className="pb-10">
                 <button onClick={()=>{
                     if(admin === false){
@@ -59,7 +74,10 @@ export default function Page(){
                                 Title,
                                 Description,
                                 Deficulty,
-                                Constraint
+                                Constraint,
+                                Example, 
+                                Company, 
+                                Topic,
                             }, {
                                 headers: {
                                     Token: localStorage.getItem("Token")

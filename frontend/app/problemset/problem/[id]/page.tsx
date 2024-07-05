@@ -17,6 +17,9 @@ interface ProblemType{
     Deficulty: String,
     Description: string,
     Constraint : string,
+    Example: string,
+    Topic: [String],
+    Company: [String],
     AdminId: String,
 }
 
@@ -58,6 +61,8 @@ export default function Page() {
     const [AllSubmission , setAllsubmission] = useState<AllDataType[]>([]);
     const [MysubmissionVeiw , setMysubmissionView] = useState<boolean>(false);
     const [AllsubmissionVeiw , setAllsubmissionView] = useState<boolean>(false);
+    const [topicView, setTopicView] = useState<boolean>(false);
+    const [compnayView, setCompanyView] = useState<boolean>(false);
 
     const codeSubmit = async()=>{
         if(loginAtom){
@@ -213,7 +218,11 @@ export default function Page() {
                             Token : localStorage.getItem("Token")
                         }
                     })
-                    setMysubmission(userDetail.data.SubmitCode)
+                    const tempSubmission = userDetail.data.SubmitCode.filter((data:any)=>{
+                        return (data.problemId === id);
+                    });
+                    // for(let i = 0 ;i < userDetail.data.SubmitCode.length)
+                    setMysubmission(tempSubmission)
                     const problemCode = userDetail.data?.ProblemCode || [];
                     let flag = true;
                     let it = -1;
@@ -292,15 +301,35 @@ export default function Page() {
                                 }} className="active:border px-2 py-1 bg-red-600 rounded-lg">Delete</button>
                             </div>
                         </div>
-                        <div className="border-b h-[600px] overflow-y-auto">
+                        <div className="border-b h-[700px] overflow-y-auto">
                             <div className="flex mb-4"><OutputShow outputCode={problem?.Description || "Not Given ..."} /> </div>
                             <div className="text-2xl text-slate-400 font-bold mb-2">Constraints</div>
                             <div className="flex mb-4"><OutputShow outputCode={problem?.Constraint || "Not Given ..."} /> </div>
+                            <div className="text-2xl text-slate-400 font-bold mb-2">Example</div>
+                            <div className="flex mb-4"><OutputShow outputCode={problem?.Example || "Not Given ..."} /> </div>
+                        </div>
+                        <div className="border-b h-[285px] overflow-y-auto">
+                            <button onClick={()=>setTopicView(!topicView)} className="border w-full text-start px-6 py-4 my-4 rounded-lg font-bold hover:text-blue-600">Topic</button>
+                            <div className={`${(topicView)?"":"hidden"} w-full text-start px-6 my-4 flex flex-wrap`}>
+                                {problem?.Topic.map((topic, index)=>{
+                                    return (
+                                        <div key={index} className={` border mx-2 my-2 px-2 py-2 rounded-lg shadow-lg shadow-slate-400`}>{topic}</div>
+                                    )
+                                })}
+                            </div>
+                            <button onClick={()=> setCompanyView(!compnayView)} className="border w-full text-start px-6 py-4 my-4 rounded-lg font-bold hover:text-blue-600">Compnay</button>
+                            <div className={`${(compnayView)?"":"hidden"} w-full text-start px-6 my-4 flex flex-wrap1`}>
+                                {problem?.Company.map((compnay, index)=>{
+                                    return (
+                                        <div key={index} className={` border mx-2 my-2 px-2 py-2 rounded-lg shadow-lg shadow-slate-400`}>{compnay}</div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
                     {/* my Submission  */}
                     <div className={`${MysubmissionVeiw?"":"hidden"}`}>
-                        <div className="border-b h-[600px] overflow-y-auto">
+                        <div className=" h-[1040px] max-lg:h-[600px] overflow-y-auto">
                         <div className="flex flex-col-reverse">
                             {MySubmission.map((data , index)=>{
                                 return (
@@ -312,7 +341,7 @@ export default function Page() {
                     </div>
                     {/* All submission  */}
                     <div className={`${AllsubmissionVeiw?"":"hidden"}`}>
-                        <div className="border-b h-[600px] overflow-y-auto">
+                        <div className="h-[1040px] max-lg:h-[600px] overflow-y-auto">
                             <div className="flex flex-col-reverse">
                                 {AllSubmission.map((data , index)=>{
                                     return (
