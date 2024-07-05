@@ -90,7 +90,7 @@ export default function Page() {
                     setResult(compare.data.result);
                     let flag = true;
                     for(let i = 0 ; i < compare.data.result.length ; i++){
-                        if(result[i] == false){
+                        if(compare.data.result[i] == false){
                             flag = false;
                             break;
                         }
@@ -301,21 +301,25 @@ export default function Page() {
                     {/* my Submission  */}
                     <div className={`${MysubmissionVeiw?"":"hidden"}`}>
                         <div className="border-b h-[600px] overflow-y-auto">
-                        {MySubmission.map((data , index)=>{
-                            return (
-                                <MySubmissionCompo key={index} data={data} />
-                            )
-                        })}
+                        <div className="flex flex-col-reverse">
+                            {MySubmission.map((data , index)=>{
+                                return (
+                                    <MySubmissionCompo key={index} data={data} />
+                                )
+                            })}
+                        </div>
                         </div>
                     </div>
                     {/* All submission  */}
                     <div className={`${AllsubmissionVeiw?"":"hidden"}`}>
                         <div className="border-b h-[600px] overflow-y-auto">
-                        {AllSubmission.map((data , index)=>{
-                            return (
-                                <AllSubmissionCompo key={index} data={data} />
-                            )
-                        })}
+                            <div className="flex flex-col-reverse">
+                                {AllSubmission.map((data , index)=>{
+                                    return (
+                                        <AllSubmissionCompo key={index} data={data} />
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
             </div>

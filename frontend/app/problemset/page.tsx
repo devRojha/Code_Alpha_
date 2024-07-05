@@ -29,6 +29,7 @@ export default function Page() {
     const logedIn = useRecoilValue(logedinState);
 
     useEffect(() => {
+        // console.log(Admin);
         const token = localStorage.getItem("Token") || "";
         if(!token){
             router.push("/")
@@ -50,7 +51,7 @@ export default function Page() {
         }
 
         setFilterProblem(filteredProblems);
-    }, [status, difficulty, searchProb, Admin, AllProblem]);
+    }, [status, difficulty, searchProb, Admin, AllProblem, logedIn]);
 
     useEffect(()=>{
         async function fetchdata (){
@@ -83,19 +84,14 @@ export default function Page() {
                     accept: Accept,
                     status : problemStatus
                 }
-                console.log(problem);
+                // console.log(problem);
                 Problems.push(problem);
             }
             setAllProblem(Problems);
         }
         fetchdata();
-    },[])
+    },[Admin, logedIn])
 
-    if(filterProblem.length == 0){
-        return (
-            <ProblemLoader />
-        )
-    }
     return (
         <div className="bg-slate-700">
             <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 border-b overflow-y-auto pt-10 ">
@@ -124,16 +120,22 @@ export default function Page() {
                     <div className="col-span-1 px-4 py-2">Acceptance</div>
                 </div>
                 {/* question grid */}
-                {filterProblem.map(prob => (
-                    <Problem
-                        key={it++}
-                        id={prob.id}
-                        status={prob.status}
-                        title={prob.title}
-                        difficulty={prob.difficulty}
-                        accept={prob.accept}
-                    />
-                ))}
+                <div>
+                    {(filterProblem.length == 0)?
+                    <div> <ProblemLoader /></div>
+                    :<div>
+                        {filterProblem.map(prob => (
+                            <Problem
+                                key={it++}
+                                id={prob.id}
+                                status={prob.status}
+                                title={prob.title}
+                                difficulty={prob.difficulty}
+                                accept={prob.accept}
+                            />
+                        ))}
+                    </div>}
+                </div>
             </div>
         </div>
     );
