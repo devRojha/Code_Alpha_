@@ -27,6 +27,31 @@ const UserSchema = new mongoose.Schema({
         }],
         default:[]
     },
+    SubmitCode:{
+        type: [{
+            problemId:{
+                type: String,
+                required:true
+            },
+            lang:{
+                type: String,
+                required:true
+            },
+            code:{
+                type: String,
+                required:true
+            },
+            status:{
+                type: String,
+                default: "fail"
+            },
+            date:{
+                type : String,
+                required:true
+            }
+        }],
+        default:[]
+    },
     ProblemSolved: {
         type: [String], // Assuming the problems are stored as an array of strings
         default: []

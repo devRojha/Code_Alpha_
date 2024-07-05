@@ -20,6 +20,7 @@ const profile = async (req , res)=>{
                 ProblemSolved: solvedProblem,
                 ProblemCode : userFound.ProblemCode,
                 ContestSolved: [],
+                SubmitCode : userFound.SubmitCode,
                 Admin: true,
             });
         }

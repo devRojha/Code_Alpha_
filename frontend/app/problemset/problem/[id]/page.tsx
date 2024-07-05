@@ -5,6 +5,7 @@ import CodeEditorcool from "@/components/CodeEditorcool";
 import OutputShow from "@/components/OutputShow";
 import { logedinState } from "@/state/atom";
 import axios from "axios";
+import { constants } from "buffer";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -18,6 +19,22 @@ interface ProblemType{
     Constraint : string,
     AdminId: String,
 }
+
+interface MyDataType{
+    date: string,
+    status: string,
+    lang: string,
+    code: string
+}
+
+interface AllDataType{
+    userName:string
+    date: string,
+    status: string,
+    lang: string,
+    code: string
+}
+
 export default function Page() {
     const param = useParams();
     const id = param.id;
@@ -36,6 +53,11 @@ export default function Page() {
     const [result , setResult] = useState<boolean[]>([]);
     const [showSubmit , setShowSubmit] = useState<boolean>(false);
     const loginAtom = useRecoilValue(logedinState);
+    const [DescriptionVeiw , setDescriptionView] = useState<boolean>(true);
+    const [MySubmission , setMysubmission] = useState<MyDataType[]>([]);
+    const [AllSubmission , setAllsubmission] = useState<AllDataType[]>([]);
+    const [MysubmissionVeiw , setMysubmissionView] = useState<boolean>(false);
+    const [AllsubmissionVeiw , setAllsubmissionView] = useState<boolean>(false);
 
     const codeSubmit = async()=>{
         if(loginAtom){
@@ -66,6 +88,40 @@ export default function Page() {
                     })
                     // console.log(compare.data.result);
                     setResult(compare.data.result);
+                    let flag = true;
+                    for(let i = 0 ; i < compare.data.result.length ; i++){
+                        if(result[i] == false){
+                            flag = false;
+                            break;
+                        }
+                    }
+                    try{
+                        //pushing to problem
+                        await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/update/submitcode`,{
+                            lang,
+                            status: (flag)?"success":"fail",
+                            code,
+                            problemId: id
+                        },{
+                            headers:{
+                                Token: localStorage.getItem("Token")
+                            }
+                        })
+                        // pushing to user
+                        await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/update/submitcode`,{
+                            lang,
+                            status: (flag)?"success":"fail",
+                            code,
+                            problemId : id
+                        },{
+                            headers:{
+                                Token: localStorage.getItem("Token")
+                            }
+                        })
+                    }
+                    catch(e){
+                        console.log(e);
+                    }
                 }
                 setShowSubmit(true);
                 setInputView(false); setOutputView(true); setVerdic(false);
@@ -146,6 +202,7 @@ export default function Page() {
                         }
                     })
                     setProblem(response.data.problem);
+                    setAllsubmission(response.data.problem.TotalSubmit)
                     const Admin = localStorage.getItem("Admin")
                     if(response.data.Edit === "true" && Admin === "true"){
                         setcanEdit(true);
@@ -156,6 +213,7 @@ export default function Page() {
                             Token : localStorage.getItem("Token")
                         }
                     })
+                    setMysubmission(userDetail.data.SubmitCode)
                     const problemCode = userDetail.data?.ProblemCode || [];
                     let flag = true;
                     let it = -1;
@@ -177,7 +235,7 @@ export default function Page() {
             }
         }
         getProblem();
-    },[id])
+    },[id, loginAtom])
 
     //code store for user
     useEffect(()=>{
@@ -200,38 +258,65 @@ export default function Page() {
             }
         }, 2000);
         return ()=> clearTimeout(delay);
-    },[code])
+    },[code, loginAtom])
 
     return (
-        <div className="border-b bg-zinc-800 pt-8  text-white min-h-screen grid grid-cols-2 max-lg:grid-cols-1">
+        <div className="border-b bg-zinc-800 pt-5  text-white min-h-screen grid grid-cols-2 max-lg:grid-cols-1">
             {/* problem  */}
                 <div className="overflow-y-auto border-r-4 border-r-slate-300 h-full px-2 border-b max-lg:border-r-0 ">
-                    <div className="text-3xl font-bold mb-6 flex justify-between overflow-auto">
-                        <div>{problem?.Title}</div>
-                        <div className={`${(problem?.Deficulty == 'Easy')?"text-green-600":(problem?.Deficulty == 'Hard')?"text-red-600":"text-yellow-600"} text-lg font-normal mt-1 mr-4`}>{problem?.Deficulty}</div>
-                        <div className={`${canEdit?"flex":"hidden"} text-lg font-normal mr-6 space-x-3`}>
-                            <button onClick={()=>router.push(`/problemset/editproblem/${id}`)} className="active:border px-2 py-1 rounded-lg bg-blue-600">Edit</button>
-                            <button onClick={async ()=>{
-                                await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/deleteproblem`,{
-                                    headers:{
-                                        Token : localStorage.getItem("Token"),
-                                        id : id
-                                    }
-                                })
-                                await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/deletetestCases`,{
-                                    headers:{
-                                        Token : localStorage.getItem("Token"),
-                                        ProblemId : id
-                                    }
-                                })
-                                router.push("/problemset")
-                            }} className="active:border px-2 py-1 bg-red-600 rounded-lg">Delete</button>
+                    <div  className="py-2 shadow-lg shadow-slate-700 mb-6 grid grid-cols-3">
+                        <button onClick={()=>{setDescriptionView(true); setAllsubmissionView(false); setMysubmissionView(false)}} className="hover:text-blue-600 active:text-black">Description</button>
+                        <button onClick={()=>{setDescriptionView(false); setAllsubmissionView(false); setMysubmissionView(true)}} className="hover:text-blue-600 active:text-black border-x">My Submission</button>
+                        <button onClick={()=>{setDescriptionView(false); setAllsubmissionView(true); setMysubmissionView(false)}} className="hover:text-blue-600 active:text-black">All Submission</button>
+                    </div>
+                    <div className={`${DescriptionVeiw?"":"hidden"}`}>
+                        <div className="text-3xl font-bold mb-6 flex justify-between overflow-auto">
+                            <div>{problem?.Title}</div>
+                            <div className={`${(problem?.Deficulty == 'Easy')?"text-green-600":(problem?.Deficulty == 'Hard')?"text-red-600":"text-yellow-600"} text-lg font-normal mt-1 mr-4`}>{problem?.Deficulty}</div>
+                            <div className={`${canEdit?"flex":"hidden"} text-lg font-normal mr-6 space-x-3`}>
+                                <button onClick={()=>router.push(`/problemset/editproblem/${id}`)} className="active:border px-2 py-1 rounded-lg bg-blue-600">Edit</button>
+                                <button onClick={async ()=>{
+                                    await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/deleteproblem`,{
+                                        headers:{
+                                            Token : localStorage.getItem("Token"),
+                                            id : id
+                                        }
+                                    })
+                                    await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/deletetestCases`,{
+                                        headers:{
+                                            Token : localStorage.getItem("Token"),
+                                            ProblemId : id
+                                        }
+                                    })
+                                    router.push("/problemset")
+                                }} className="active:border px-2 py-1 bg-red-600 rounded-lg">Delete</button>
+                            </div>
+                        </div>
+                        <div className="border-b h-[600px] overflow-y-auto">
+                            <div className="flex mb-4"><OutputShow outputCode={problem?.Description || "Not Given ..."} /> </div>
+                            <div className="text-2xl text-slate-400 font-bold mb-2">Constraints</div>
+                            <div className="flex mb-4"><OutputShow outputCode={problem?.Constraint || "Not Given ..."} /> </div>
                         </div>
                     </div>
-                    <div className="border-b h-[600px] overflow-y-auto">
-                        <div className="flex mb-4"><OutputShow outputCode={problem?.Description || "Not Given ..."} /> </div>
-                        <div className="text-2xl text-slate-400 font-bold mb-2">Constraints</div>
-                        <div className="flex mb-4"><OutputShow outputCode={problem?.Constraint || "Not Given ..."} /> </div>
+                    {/* my Submission  */}
+                    <div className={`${MysubmissionVeiw?"":"hidden"}`}>
+                        <div className="border-b h-[600px] overflow-y-auto">
+                        {MySubmission.map((data , index)=>{
+                            return (
+                                <MySubmissionCompo key={index} data={data} />
+                            )
+                        })}
+                        </div>
+                    </div>
+                    {/* All submission  */}
+                    <div className={`${AllsubmissionVeiw?"":"hidden"}`}>
+                        <div className="border-b h-[600px] overflow-y-auto">
+                        {AllSubmission.map((data , index)=>{
+                            return (
+                                <AllSubmissionCompo key={index} data={data} />
+                            )
+                        })}
+                        </div>
                     </div>
             </div>
             {/* compiler  */}
@@ -309,3 +394,37 @@ function ShowTestPass({result}:{result:boolean[]}){
 }
 
 
+
+function MySubmissionCompo({data}:{data:MyDataType}){
+    const [codeShow, setCodeShow] = useState(false);
+    return (
+        <div className="mb-2">
+            <div className={`${(data.status === "success")?"bg-green-600":"bg-red-600"} border rounded-lg py-2 px-5 flex justify-between`}>
+                <div>{data.date.split(" ")[0]} {data.date.split(" ")[1]} {data.date.split(" ")[2]} {data.date.split(" ")[3]}</div>
+                <div>{data.status}</div>
+                <button onClick={()=>setCodeShow(!codeShow)} className="hover:text-blue-600">code</button>
+                <div>{data.lang}</div>
+            </div>
+            <div className={`${(codeShow)?"":"hidden"} border-x border-b border-yellow-600 mb-2`}>
+                <OutputShow outputCode={data.code} /> 
+            </div>
+        </div>
+    )
+}
+
+function AllSubmissionCompo({data}:{data:AllDataType}){
+    const [codeShow, setCodeShow] = useState(false);
+    return (
+        <div className="mb-2">
+            <div className={`${(data.status === "success")?"bg-green-600":"bg-red-600"} border rounded-lg py-2 px-5 flex justify-between`}>
+                <div>{data.date.split(" ")[0]} {data.date.split(" ")[1]} {data.date.split(" ")[2]} {data.date.split(" ")[3]}</div>
+                <div>{data.userName}</div>
+                <button onClick={()=>setCodeShow(!codeShow)} className="hover:text-blue-600">code</button>
+                <div>{data.lang}</div>
+            </div>
+            <div className={`${(codeShow)?"":"hidden"} border-x border-b border-yellow-600 mb-2`}>
+                <OutputShow outputCode={data.code} /> 
+            </div>
+        </div>
+    )
+}

@@ -18,8 +18,33 @@ const ProblemSchema = new mongoose.Schema({
         required: false
     },
     TotalSubmit: {
-        type: Number,
-        default: 0,
+        type: [{
+            date:{
+                type: String,
+                required: true
+            },
+            userId:{
+                type: String,
+                required: true
+            },
+            userName:{
+                type: String,
+                required: true
+            },
+            lang:{
+                type: String,
+                required: true
+            },
+            status:{
+                type: String,
+                default: "fail"
+            },
+            code:{
+                type: String,
+                required: true
+            }
+        }],
+        default:[]
     },
     AcceptSubmit:{
         type: Number,
