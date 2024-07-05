@@ -29,7 +29,6 @@ export default function Page() {
     const logedIn = useRecoilValue(logedinState);
 
     useEffect(() => {
-        // console.log(Admin);
         const token = localStorage.getItem("Token") || "";
         if(!token){
             router.push("/")
