@@ -71,10 +71,17 @@ export default function Page() {
                     }
                 }
 
-                let Accept = Math.floor(Math.random() * 101);
-                if(FetchProblems[i].TotalSubmit > 0){
-                    Accept = (FetchProblems[i].AcceptSubmit* 100)/FetchProblems[i].TotalSubmit;
+                let Accept = 0;
+                if(FetchProblems[i].TotalSubmit.length > 0){
+                    let count = 0;
+                    for(let j = 0 ; j < FetchProblems[i].TotalSubmit.length ; j++){
+                        if( FetchProblems[i].TotalSubmit[j].status === "success"){
+                            count++;
+                        }
+                    }
+                    Accept = (count* 100)/FetchProblems[i].TotalSubmit.length;
                 }
+
                 var problem:ProblemType = {
                     id : FetchProblems[i]._id,
                     title : FetchProblems[i].Title,

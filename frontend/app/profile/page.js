@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil";
 
+
 export default function Page() {
     const router = useRouter();
     const [nameEdit, setNameEdit] = useState(false);
@@ -19,6 +20,8 @@ export default function Page() {
     const [hardCreate, setHardCreate] = useState([]);
     const [mediumCreate, setMediumCreate] = useState([]);
     const [user, setUser] = useState({});
+    const [AllUser , setAllUser] = useState([]);
+    const [TotalProblem, setTotalProblem] = useState(0);
     // const [admin , setAdmin] = useState(false);
     const adminatom = useRecoilValue(adminState);
 
@@ -50,11 +53,23 @@ export default function Page() {
                 setEasyCreate(easycreate);
                 setMediumCreate(mediumcreate);
                 setHardCreate(hardcreate);
+
+
+                let ResUser = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/all`,{
+                    headers:{
+                        Token: localStorage.getItem("Token")
+                    }
+                });
+                const users = ResUser.data.allUsers;
+                users.sort((a, b) => b.ProblemSolved.length - a.ProblemSolved.length);
+                setAllUser(users);
+                let allProblem = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/allproblem`)
+                setTotalProblem(allProblem.data.Problems.length);
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-
         fetchData();
     }, []);
 
@@ -98,21 +113,22 @@ export default function Page() {
 
     return (
         <div className="bg-zinc-900 min-h-screen text-white pt-10 px-8">
-            <div className="text-3xl font-bold mb-8 text-green-800">Hii {user.Name}...</div>
             <div className="space-y-8">
                 <div className="grid grid-cols-7">
-                    <div className="space-y-8 col-span-3">
-                        <div className="flex space-x-4">
-                            <label className="font-bold">Name :</label>
-                            <div className={`${!nameEdit ? "flex" : "hidden"} w-[200px] text-slate-400 px-4 py-1 focus:outline-none bg-white`}>{user.Name}</div>
-                            <input onChange={(e)=>setName(e.target.value)} className={`${nameEdit ? "flex" : "hidden"} w-[200px] text-black px-4 py-1 focus:outline-none`} />
-                            <button onClick={() =>{
-                                if(nameEdit){
-                                    setName("");
-                                }
-                                setNameEdit(!nameEdit);
-                            }} className="border bg-blue-600 px-2 py-1 rounded-lg hover:border-black active:text-slate-800">{!nameEdit ? "Edit" : "cancel"}</button>
-                        </div>
+                    <div className="col-span-3 space-y-8">
+                        <div className="text-3xl font-bold mb-8 text-green-800">Hii {user.Name}...</div>
+                        <div className="space-y-8">
+                            <div className="flex space-x-4">
+                                <label className="font-bold">Name :</label>
+                                <div className={`${!nameEdit ? "flex" : "hidden"} w-[200px] text-slate-400 px-4 py-1 focus:outline-none bg-white`}>{user.Name}</div>
+                                <input onChange={(e)=>setName(e.target.value)} className={`${nameEdit ? "flex" : "hidden"} w-[200px] text-black px-4 py-1 focus:outline-none`} />
+                                <button onClick={() =>{
+                                    if(nameEdit){
+                                       setName("");
+                                    }
+                                 setNameEdit(!nameEdit);
+                                 }} className="border bg-blue-600 px-2 py-1 rounded-lg hover:border-black active:text-slate-800">{!nameEdit ? "Edit" : "cancel"}</button>
+                            </div>
                         <div className="flex space-x-4">
                             <label className="font-bold">Email :</label>
                             <div className={`${!emailEdit ? "flex" : "hidden"} w-[200px] text-slate-400 px-4 py-1 focus:outline-none bg-white`}>{user.Email}</div>
@@ -125,15 +141,46 @@ export default function Page() {
                             }} className="border bg-blue-600 px-2 py-1 rounded-lg hover:border-black active:text-slate-800">{!emailEdit ? "Edit" : "cancel"}</button>
                         </div>
                     </div>
-                    {/* updata and delete user */}
-                    <div className="col-span-1 flex flex-col justify-center">
-                        <button onClick={UpdateUser} className={`${(emailEdit || nameEdit)?"":"hidden"} border px-2 py-1 rounded-lg bg-blue-600 mb-4`}>Confirm Change</button>
-                        <button onClick={DeleteUser} className="border px-2 py-1 rounded-lg bg-red-600">Delete Account</button>
+                        {/* updata and delete user */}
+                        <div className="col-span-1 flex flex-col justify-center">
+                            <div><button onClick={UpdateUser} className={`${(emailEdit || nameEdit)?"":"hidden"} border px-2 py-1 rounded-lg bg-blue-600 mb-4`}>Confirm Change</button></div>
+                            <div><button onClick={DeleteUser} className="border px-2 py-1 rounded-lg bg-red-600">Delete Account</button></div>
+                        </div>
+                        <div className="flex space-x-4">
+                            <label className="font-bold">Total Problem Solved :</label>
+                            <div className={` font-bold`}><span className="text-green-700">{user.ProblemSolved?.length || 0}</span> out of <span className="text-red-700">{TotalProblem}</span></div>
+                        </div>
+                        <div className="w-[400px] h-[40px] border rounded-md">
+                            <div className={`${(user.ProblemSolved?.length == 0)? "w-[0%]":`w-[${(user.ProblemSolved?.length*100)/TotalProblem}%]`}  bg-green-700 h-full text-center flex flex-col justify-center rounded-md`}>{(user.ProblemSolved?.length*100)/TotalProblem}%</div>
+                        </div>
                     </div>
-                </div>
-                <div className="flex space-x-4">
-                    <label className="font-bold">Total Problem Solved :</label>
-                    <div className={`text-green-700 font-bold`}>{user.ProblemSolved?.length}</div>
+                    {/* standing  */}
+                    <div className="col-span-4">
+                        <div className="flex">
+                            <div className="text-2xl font-semibold mb-4">Standing</div>
+                            <button onClick={()=>{
+                                router.push(`#${user._id}`);
+                            }} className="border px-2 py-1 ml-8 mb-4 rounded-lg hover:text-blue-600 active:border-black">Your Standing</button>
+                        </div>
+                        <div className=" rounded-lg bg-slate-300 ">
+                            <div className="grid grid-cols-4 px-6 sticky border-b-2 border-black ">
+                                <div className="col-span-1 border-slate-500 border-r text-black font-semibold px-2 text-center">Rank</div>
+                                <div className="col-span-2 border-slate-500  border-x text-black font-semibold px-2 text-center">Name</div>
+                                <div className="col-span-1 border-slate-500  border-l text-black font-semibold px-2 text-center">Language</div>
+                            </div>
+                            <div className="h-[445px] overflow-y-auto">
+                                {AllUser.map((standing, index)=>{
+                                    return (
+                                        <div id={`${standing._id}`}  key={index} className={`grid grid-cols-4 px-6 border-b border-slate-500 ${(user._id === standing._id)?"bg-green-600":""}`}>
+                                            <div className="col-span-1 border-slate-500 border-r text-black font-semibold px-2 text-center">{index+1}</div>
+                                            <div className="col-span-2 border-slate-500  border-x text-black font-semibold px-2 text-center">{standing.Name}</div>
+                                            <div className="col-span-1 border-slate-500  border-l text-black font-semibold px-2 text-center">{standing.lang}</div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {/* problem solved list  */}
                 <div className="w-full">

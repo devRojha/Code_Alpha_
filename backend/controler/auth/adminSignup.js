@@ -10,13 +10,14 @@ const secretKey = process.env.SECRET_KEY;
 const signupType = z.object({
     Name: z.string().min(3),
     Email : z.string().email(),
-    Password : z.string().min(6)
+    Password : z.string().min(6),
+    AdminSecret : z.string().min(10)
 })
 
 const AdminSignup = async (req, res) => {
-    const { Name, Email, Password } = req.body;
+    const { Name, Email, Password, AdminSecret } = req.body;
 
-    const zodPass = signupType.safeParse({ Name, Email, Password });
+    const zodPass = signupType.safeParse({ Name, Email, Password, AdminSecret });
     if(!zodPass.success){
         res.status(409).json({msg: "input Validation"})
         return
@@ -25,7 +26,7 @@ const AdminSignup = async (req, res) => {
         // Check if the user already exists
         const userFind = await User.findOne({ Email });
 
-        if (!userFind) {
+        if ((!userFind) && (AdminSecret === process.env.ADMIN_SECRET)) {
             // Hash the password before storing it
             const hashedPassword = await bcrypt.hash(Password, 10); // 10 is the salt rounds
 

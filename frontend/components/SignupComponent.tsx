@@ -12,6 +12,7 @@ export default function SignupComponent(){
     const [Name, setName] = useState<string>("");
     const [Password, setPassword] = useState<string>("");
     const [Admin, setAdmin] = useState<boolean>(false);
+    const [AdminSecret , setAdminSecret] = useState<string>("");
     const setAdminAtom = useSetRecoilState(adminState);
     const setLoginAtom = useSetRecoilState(logedinState);
 
@@ -20,7 +21,8 @@ export default function SignupComponent(){
             const response = await axios.post(`${(Admin)?`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/admin/signup`:`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/signup`}`, {
                 Name,
                 Email,
-                Password
+                Password,
+                AdminSecret
             });
             console.log(response.data)
             if (response.data.Token) {
@@ -38,7 +40,7 @@ export default function SignupComponent(){
             }
         } catch (error) {
             setLoginAtom(false);
-            console.error("Signin failed", error);
+            console.error("Signup failed", error);
             alert("Signin Error")
         }
     };
@@ -55,6 +57,7 @@ export default function SignupComponent(){
                         <div className="flex mb-4 ">
                             <input  onChange={(e)=>setAdmin(e.target.checked)} type={"checkbox"} className="border rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black mr-4"/>
                             <label  className="text-black mb-2 flex flex-col justify-center h-full">Admin</label>
+                            <input onChange={(e)=>setAdminSecret(e.target.value)} className="ml-2 p-1 rounded-md focus:outline-none" placeholder="Put Admin Secret"/>
                         </div>
                         <div className="flex justify-center space-x-6 mb-4 mt-4">
                             <button onClick={handleSubmit} className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Register</button>
