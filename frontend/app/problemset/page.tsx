@@ -80,6 +80,7 @@ export default function Page() {
                         }
                     }
                     Accept = (count* 100)/FetchProblems[i].TotalSubmit.length;
+                    Accept = Math.floor(Accept);
                 }
 
                 var problem:ProblemType = {

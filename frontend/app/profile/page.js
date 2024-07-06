@@ -22,6 +22,7 @@ export default function Page() {
     const [user, setUser] = useState({});
     const [AllUser , setAllUser] = useState([]);
     const [TotalProblem, setTotalProblem] = useState(0);
+    const [progresBar , setProgresBar] = useState(0);
     // const [admin , setAdmin] = useState(false);
     const adminatom = useRecoilValue(adminState);
 
@@ -65,7 +66,8 @@ export default function Page() {
                 setAllUser(users);
                 let allProblem = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/allproblem`)
                 setTotalProblem(allProblem.data.Problems.length);
-
+                //setting progres bar %
+                setProgresBar(Math.floor((response.data.ProblemSolved?.length*100)/allProblem.data.Problems.length));
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -151,7 +153,7 @@ export default function Page() {
                             <div className={` font-bold`}><span className="text-green-700">{user.ProblemSolved?.length || 0}</span> out of <span className="text-red-700">{TotalProblem}</span></div>
                         </div>
                         <div className="w-[400px] h-[40px] border rounded-md">
-                            <div className={`${(user.ProblemSolved?.length == 0)? "w-[0%]":`w-[${(user.ProblemSolved?.length*100)/TotalProblem}%]`}  bg-green-700 h-full text-center flex flex-col justify-center rounded-md`}>{(user.ProblemSolved?.length*100)/TotalProblem}%</div>
+                            <div className={`${(user.ProblemSolved?.length == 0)? "w-[0%]":`w-[${progresBar}%]`}  bg-green-700 h-full text-center flex flex-col justify-center rounded-md`}>{progresBar}%</div>
                         </div>
                     </div>
                     {/* standing  */}
