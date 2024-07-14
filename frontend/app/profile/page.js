@@ -153,6 +153,7 @@ export default function Page() {
                             <div className={` font-bold`}><span className="text-green-700">{user.ProblemSolved?.length || 0}</span> out of <span className="text-red-700">{TotalProblem}</span></div>
                         </div>
                         <div className="w-[400px] h-[40px] border rounded-md">
+                            
                             <div className={`${(user.ProblemSolved?.length == 0)? "w-[0%]":`w-[${progresBar}%]`}  bg-green-700 h-full text-center flex flex-col justify-center rounded-md`}>{progresBar}%</div>
                         </div>
                     </div>
