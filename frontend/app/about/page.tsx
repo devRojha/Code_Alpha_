@@ -21,12 +21,12 @@ export default function Page(){
     return (
         <div className="px-20 max-lg:px-2 bg-zinc-800 pt-20 text-white">
             <div className="py-5 text-white mb-12">
-                <div className="text-3xl max-sm:text-2xl font-semibold mb-8 ml-4 text-white">About Online Judge</div>
+                <div className="text-3xl max-sm:text-2xl font-semibold mb-8 ml-4 text-white">About Code Alpha</div>
                 <div className="grid grid-cols-2 max-md:grid-cols-1 space-x-2">
                     <div className="pt-10 pr-8 max-md:pr-2 text-md">
                         <AboutCompo 
                             title={"Code Compilation and Execution"}
-                            para={"Online Judge provides a seamless environment where you can write, compile, and run your code effortlessly. Our intuitive interface ensures you spend more time coding and less time dealing with setup and configuration."}
+                            para={"Code Alpha provides a seamless environment where you can write, compile, and run your code effortlessly. Our intuitive interface ensures you spend more time coding and less time dealing with setup and configuration."}
                         />
                         <AboutCompo
                             title={"College Contests"}

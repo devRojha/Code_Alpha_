@@ -26,3 +26,9 @@ EXPOSE 8000
 
 # Run the application
 CMD ["npm", "run", "dev"]
+
+#docker buildx create --use
+#docker buildx inspect --bootstrap
+
+#docker buildx build --platform linux/amd64 -t <tag> . --push
+
