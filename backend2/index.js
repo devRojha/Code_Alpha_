@@ -37,8 +37,8 @@ app.post("/submit" , async (req , res)=>{
     var time = 0.0;
     for(i =0 ;i < testCases.length ; i++){
         try{
-            const filePath = generateCodeFile(lang , code);
-            const inputPath = generateInputFile(testCases[i]);
+            const filePath = await generateCodeFile(lang , code);
+            const inputPath = await generateInputFile(testCases[i]);
             const data = await executeCode(filePath , lang , inputPath);
             result.push(data.output);
             time += parseFloat(data.executionTimeSec);

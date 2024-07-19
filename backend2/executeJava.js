@@ -12,15 +12,16 @@ const executeJava = (filepath, inputPath) => {
 
   return new Promise((resolve, reject) => {
     // Set a timeout to handle long-running processes
-    const timeoutId = setTimeout(() => {
-      cleanup([filepath, inputPath, tempFilePath]);
-      reject("Time Limit Exceeded");
-    }, 4000);
+    // const timeoutId = setTimeout(() => {
+    //   cleanup([filepath, inputPath, tempFilePath]);
+    //   reject("Time Limit Exceeded");
+    // }, 4000);
 
     // Rename the file to Main.java
     fs.rename(filepath, tempFilePath, (renameErr) => {
       if (renameErr) {
-        clearTimeout(timeoutId);
+        // clearTimeout(timeoutId);
+        cleanup([inputPath, filepath]);
         return reject({ error: renameErr });
       }
 
@@ -28,7 +29,7 @@ const executeJava = (filepath, inputPath) => {
       exec(`javac ${tempFilePath}`, (compileError, compileStdout, compileStderr) => {
         if (compileError) {
           cleanup([inputPath, tempFilePath]);
-          clearTimeout(timeoutId);
+          // clearTimeout(timeoutId);
           return reject({ error: compileError, stderr: compileStderr });
         }
 
@@ -40,7 +41,7 @@ const executeJava = (filepath, inputPath) => {
 
         // Execute the Java class
         exec(command, (runError, stdout, stderr) => {
-          clearTimeout(timeoutId);
+          // clearTimeout(timeoutId);
           if (runError) {
             cleanup([inputPath, tempFilePath]);
             fs.rename(tempFilePath, filepath, (cleanupErr) => {
@@ -61,6 +62,7 @@ const executeJava = (filepath, inputPath) => {
             // Clean up: Rename the file back to its original name
             fs.rename(tempFilePath, filepath, (cleanupErr) => {
               if (cleanupErr) {
+                cleanup([inputPath, tempFilePath]);
                 return reject({ error: cleanupErr });
               }
               cleanup([filepath, inputPath]);

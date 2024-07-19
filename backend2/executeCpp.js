@@ -18,16 +18,16 @@ const executeCpp = (filePath, inputPath) => {
 
     return new Promise((resolve, reject) => {
 
-        const timeoutId = setTimeout(() => {
-            cleanup([filePath, outputFilePath, inputPath]);
-            reject("Time Limit Exceeded");
-        }, 4000);
+        // const timeoutId = setTimeout(() => {
+        //     cleanup([filePath, outputFilePath, inputPath]);
+        //     reject("Time Limit Exceeded");
+        // }, 4000);
 
         exec(
             `g++ -std=c++11 ${filePath} -o ${outputFilePath} && cd ${outputPath} && ./${fileName} < ${inputPath}`,
             (error, stdout, stderr) => {
                 cleanup([filePath, outputFilePath, inputPath]);
-                clearTimeout(timeoutId);
+                // clearTimeout(timeoutId);
                 if (error) {
                     console.error('Compilation error:', error);
                     reject(`Error: ${error.message}`);
