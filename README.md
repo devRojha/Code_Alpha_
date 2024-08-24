@@ -1,8 +1,8 @@
-# Online Judge 
+# Code Alpha
 
 ## 1. Overview
 
-Online Judge provides a seamless environment to write, compile, and run your code effortlessly, challenging your skills in a competitive setting. Access a collection of problem sheets to enhance your coding abilities across various topics. Track your progress, celebrate achievements, and identify areas for improvement.
+Code Alpha provides a seamless environment to write, compile, and run your code effortlessly, challenging your skills in a competitive setting. Access a collection of problem sheets to enhance your coding abilities across various topics. Track your progress, celebrate achievements, and identify areas for improvement.
 
 ## 2. Features
 
