@@ -21,7 +21,7 @@ export default function Page(){
     return (
         <div className="px-20 max-lg:px-2 bg-zinc-800 pt-20 text-white">
             <div className="py-5 text-white mb-12">
-                <div className="text-3xl max-sm:text-2xl font-semibold mb-8 ml-4 text-white">About Code Alpha</div>
+                <div className="text-3xl max-sm:text-2xl font-semibold mb-8 text-white">About Code Alpha</div>
                 <div className="grid grid-cols-2 max-md:grid-cols-1 space-x-2">
                     <div className="pt-10 pr-8 max-md:pr-2 text-md">
                         <AboutCompo 
@@ -29,8 +29,8 @@ export default function Page(){
                             para={"Code Alpha provides a seamless environment where you can write, compile, and run your code effortlessly. Our intuitive interface ensures you spend more time coding and less time dealing with setup and configuration."}
                         />
                         <AboutCompo
-                            title={"College Contests"}
-                            para={"Teams can organize and participate in college contests easily. Our platform supports comprehensive contest management, allowing you to challenge your peers and test your skills in a competitive setting."}
+                            title={"Why Code Alpha"}
+                            para={"I created Code Alpha to solve a personal and practical problem. A few of my friends and I were passionate about competitive programming and used to challenge each other by sharing interesting problems from various platforms. However, we lacked a centralized place to upload problems, get notified, and track each other's progress. So, I built Code Alpha — a platform where users can upload competitive programming problems they find interesting. Other users get notified instantly and can attempt the problems, fostering a healthy, competitive environment. It also keeps track of everyone's progress, helping build consistency and motivation in a group."}
                         />
                         <AboutCompo
                             title={"Problem Sheets"}

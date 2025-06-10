@@ -49,7 +49,7 @@ export default function SigninComponent(){
                 <div className="mb-10 flex justify-center text-2xl font-bold text-black">Sign In</div>
                 <div className="flex justify-center w-full ">
                     <div className="flex flex-col justify-center max-lg:w-[90%] w-[60%]">
-                        <InputComponent onChange={(e)=> setEmail((e.target.value))} type={"text"} lable={"Email"}/>
+                        <InputComponent onChange={(e)=> setEmail((e.target.value))} type={"email"} lable={"Email"}/>
                         <InputComponent onChange={(e)=> setPassword(e.target.value)} type={"password"} lable={"Password"}/> 
                         <div className="flex mb-4 ">
                             <input onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setAdmin(e.target.checked)} type={"checkbox"} className="border rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black mr-4"/>

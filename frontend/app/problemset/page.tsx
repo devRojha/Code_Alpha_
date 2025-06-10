@@ -100,7 +100,7 @@ export default function Page() {
 
     return (
         <div className="bg-slate-700">
-            <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 border-b overflow-y-auto pt-10 ">
+            <div className="h-screen bg-zinc-900 mx-32 max-lg:mx-10 max-md:mx-0 border-b overflow-y-auto pt-10 ">
                 {/* filter component */}
                 <div className="mb-10 px-6 flex">
                     <select onChange={(e) => setStatus(e.target.value)} className="text-white bg-slate-800 px-2 py-2 border rounded-lg focus:outline-none mr-6">
@@ -116,7 +116,8 @@ export default function Page() {
                         <option value={"Hard"} className="text-red-700">Hard</option>
                     </select>
                     <input onChange={(e) => setSearchProb(e.target.value)} className="bg-transparent border focus:outline-none text-white px-2 py-2 rounded-lg w-[250px]" placeholder="Search..." />
-                    <button onClick={()=>{router.push("/problemset/setproblem")}} className={`${(Admin) ? "flex" : "hidden"} ml-4 border text-white px-4 py-2 rounded-lg`}>Add Problem +</button>
+                    <button onClick={()=>{router.push("/problemset/setproblem")}} className={`${(Admin) ? "flex" : "hidden"} max-lg:hidden ml-4 border text-white px-4 py-2 rounded-lg`}>Add Problem +</button>
+                    <button onClick={()=>{router.push("/problemset/setproblem")}} className={`${(Admin) ? "flex" : "hidden"} max-lg:flex hidden ml-4 border text-white px-4 py-2 rounded-lg`}>+</button>
                 </div>
                 {/* title */}
                 <div className="border-b grid grid-cols-6 text-slate-400 shadow-lg shadow-slate-600 mb-10">

@@ -11,6 +11,9 @@ export default function SignupComponent(){
     const [Email, setEmail] = useState<string>("");
     const [Name, setName] = useState<string>("");
     const [Password, setPassword] = useState<string>("");
+    const [OTP, setOTP] = useState<string>("");
+    const [OTPSection , setOTPSection] = useState<boolean>(false);
+    const [seePassword , setSeePassword] = useState<boolean>(false);
     const [Admin, setAdmin] = useState<boolean>(false);
     const [AdminSecret , setAdminSecret] = useState<string>("");
     const setAdminAtom = useSetRecoilState(adminState);
@@ -22,6 +25,7 @@ export default function SignupComponent(){
                 Name,
                 Email,
                 Password,
+                OTP,
                 AdminSecret
             });
             console.log(response.data)
@@ -44,7 +48,19 @@ export default function SignupComponent(){
             alert("Signin Error")
         }
     };
-
+    const sendOTP = async() => {
+        setOTPSection(true);
+        try{
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/email/otp`,{
+                Email
+            });
+        }
+        catch (error){
+            setOTPSection(false);
+            console.log("Failed to send OTP" , error);
+            alert("Failed to send OTP");
+        }
+    }
     return (
         <div className="bg-slate-400 flex flex-col justify-center">
             <div className="border py-20 shadow-lg shadow-white rounded-lg mx-20 max-lg:mx-10 max-sm:sm-4 flex flex-col justify-center">
@@ -52,16 +68,28 @@ export default function SignupComponent(){
                 <div className="flex justify-center w-full ">
                     <div className="flex flex-col justify-center max-lg:w-[90%] w-[60%]">
                         <InputComponent onChange={(e)=>{setName(e.target.value)}} type={"text"} lable={"Name"}/>
-                        <InputComponent onChange={(e)=>{setEmail(e.target.value)}} type={"text"} lable={"Email"}/>
+                        <InputComponent onChange={(e)=>{setEmail(e.target.value)}} type={"email"} lable={"Email"}/>
                         <InputComponent onChange={(e)=>{setPassword(e.target.value)}} type={"password"} lable={"Password"}/> 
+                        <div className="mb-4 flex">
+                            <button onClick={()=>setSeePassword(!seePassword)} className="underline">See Password</button>
+                            <div className={`${seePassword ? "flex" : "hidden"} text-slate-700 ml-2`}>: {Password}</div>
+                        </div>
                         <div className="flex mb-4 ">
                             <input  onChange={(e)=>setAdmin(e.target.checked)} type={"checkbox"} className="border rounded-md px-3 py-1 text-slate-500 focus:outline-none focus:text-black mr-4"/>
                             <label  className="text-black mb-2 flex flex-col justify-center h-full">Admin</label>
                             <input onChange={(e)=>setAdminSecret(e.target.value)} className="ml-2 p-1 rounded-md focus:outline-none" placeholder="Put Admin Secret"/>
                         </div>
-                        <div className="flex justify-center space-x-6 mb-4 mt-4">
-                            <button onClick={handleSubmit} className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Register</button>
-                        </div>  
+                        <div className={`${OTPSection ? "hidden" : ""}`}>
+                            <div className="flex justify-center space-x-6 mb-4 mt-4">
+                                <button onClick={sendOTP} className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Send OTP</button>
+                            </div>
+                        </div>
+                        <div className={`${OTPSection ? "" : "hidden"}`}>
+                            <InputComponent onChange={(e)=>{setOTP(e.target.value)}} type={"text"} lable={"OTP"}/> 
+                            <div className="flex justify-center space-x-6 mb-4 mt-4">
+                                <button onClick={handleSubmit} className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Register</button>
+                            </div>  
+                        </div>
                         <div className="flex justify-center space-x-6">
                             <button className=" text-blue-60 text-blue-700">Forgot Password</button>
                             <button onClick={()=>{router.push("/signin")}} className=" text-blue-60 text-blue-700">Login</button>

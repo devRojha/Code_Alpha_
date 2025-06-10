@@ -8,7 +8,7 @@ if(!fs.existsSync(dirCodes)){
     fs.mkdirSync(dirCodes, {recursive:true})
 }
 
-const generateCodeFile = (lang , code)=>{
+const generateCodeFile = async (lang , code)=>{
     const jobId = uuid() ;
     // console.log(jobId);
     const fileName = `${jobId}.${lang }`; //a408599a-cc38-4931-b783-245ae3371e28.cpp

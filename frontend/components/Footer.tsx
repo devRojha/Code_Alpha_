@@ -9,22 +9,20 @@ export default function Footer() {
                 <div className="grid grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 space-x-10 max-sm:space-x-0 max-sm:space-y-6 text-white">
                     <div className="h-full">
                         <label>Email: </label>
-                        <a className="hover:text-blue-800" href="mailto: devraj227804@gmail.com">devraj@gmail.com</a>
+                        <a className="hover:text-blue-800" href="mailto: devrajk0405@gmail.com">devrajk0405@gmail.com</a>
                         <br /> <br />
                         <label>Hello: </label>
-                        <a className="hover:text-blue-800" href="tel:8210129260">+91 7791239897</a>
+                        <a className="hover:text-blue-800" href="tel:8210129260">+91 8210129260</a>
                     </div>
                     <div className="hidden max-sm:flex space-x-4 h-full">
                         <a className="hover:text-blue-800" href="https://www.linkedin.com/in/devraj-kumar-5191ba250/">Linkdin</a>
                         <a className="hover:text-blue-800" href="https://x.com/devR_04">Twitter</a>
                         <a className="hover:text-blue-800" href="https://github.com/devRojha">Github</a>
-                        <a className="hover:text-blue-800" href="https://www.facebook.com/rajdev04">Facebook</a>
                     </div>
                     <div className="flex flex-col max-sm:hidden space-y-5 h-full">
                         <a className="hover:text-blue-800" href="https://www.linkedin.com/in/devraj-kumar-5191ba250/">Linkdin</a>
                         <a className="hover:text-blue-800" href="https://x.com/devR_04">Twitter</a>
                         <a className="hover:text-blue-800" href="https://github.com/devRojha">Github</a>
-                        <a className="hover:text-blue-800" href="https://www.facebook.com/rajdev04">Facebook</a>
                     </div>
                     <div className="h-full"></div>
                     <div className="h-full"></div>
