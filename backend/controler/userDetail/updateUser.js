@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs/dist/bcrypt");
 const { User } = require("../../db")
 // const {z} = require("zod");
 
@@ -108,5 +109,19 @@ const updateProblemCode = async (req, res) => {
     }
 };
 
+const updateUserPassword = async (req , res) => {
+    const id = req.id;
+    const Password = req.Passwordl;
+    try{
+        const hashedPassword = await bcrypt.hash(Password, 10);
+        await User.findByIdAndUpdate({_id : id}, {Password : hashedPassword});
+        return res.status(200).json({msg : "Password is updated"});
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({msg : "Internal Server Down"});
+    }
+}
 
-module.exports = {updateUser , updateProblemSolved , updateProblemCode };
+
+module.exports = {updateUser , updateProblemSolved , updateProblemCode, updateUserPassword };
