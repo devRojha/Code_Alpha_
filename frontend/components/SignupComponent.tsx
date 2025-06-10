@@ -91,7 +91,6 @@ export default function SignupComponent(){
                             </div>  
                         </div>
                         <div className="flex justify-center space-x-6">
-                            <button className=" text-blue-60 text-blue-700">Forgot Password</button>
                             <button onClick={()=>{router.push("/signin")}} className=" text-blue-60 text-blue-700">Login</button>
                         </div> 
                     </div>
