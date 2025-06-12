@@ -63,14 +63,14 @@ export default function Page(){
                 <input onChange={(e)=>{setCompany(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] focus:outline-none" placeholder="Type constraint here..."/>
             </div>
             <div className="pb-10">
-                <button onClick={()=>{
+                <button onClick={async ()=>{
                     if(admin === false){
                         router.push("/");
                         alert("Not an admin");
                     }
                     else{
                         try{
-                            axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/setproblem`,{
+                            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/setproblem`,{
                                 Title,
                                 Description,
                                 Deficulty,
@@ -83,7 +83,19 @@ export default function Page(){
                                     Token: localStorage.getItem("Token")
                                 }
                             })
-                            alert("Problem Added");
+                            if(response.data.msg === "Problem added"){
+                                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/email/notifications`,{
+                                    ProblemId : response.data._id
+                                },{
+                                    headers : {
+                                        Token: localStorage.getItem("Token")
+                                    }
+                                })
+                                alert("Problem Added");
+                            }
+                            else{
+                                alert("Problem Not Added");
+                            }
                         }
                         catch(e){
                             console.log(e);
