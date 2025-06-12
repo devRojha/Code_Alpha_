@@ -35,7 +35,7 @@ const setProblem = async (req, res) => {
             Topic:topic,
             AdminId : userId,
         })
-        res.status(200).json({ ProblemSet });
+        res.status(200).json({ "msg" : "Problem added", "_id" : ProblemSet._id});
     } catch (e) {
         console.error("Problem set failed with error:", e);
         res.status(500).json({ msg: "Problem set failed with error" });

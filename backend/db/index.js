@@ -18,9 +18,9 @@ mongoose.connect(dbURL)
 
 
 // Create the User model
-const User = mongoose.model('User', userSchema);
-const Problem = mongoose.model('Problem', problemSchema);
-const TestCases = mongoose.model('TestCases', TestCasesSchema)
-const Otp = mongoose.model('Otp', OtpSchema)
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+const Problem = mongoose.models.Problem || mongoose.model('Problem', problemSchema);
+const TestCases = mongoose.models.TestCases || mongoose.model('TestCases', TestCasesSchema);
+const Otp = mongoose.models.Otp || mongoose.model('Otp', OtpSchema);
 
 module.exports =  { User, Problem, TestCases, Otp };

@@ -23,7 +23,7 @@ const codeSubmitProblem = async (req, res) => {
     try { 
         const date = new Date();
         const userData = await User.findById({_id : userId});
-        const ProblemSet = await Problem.findByIdAndUpdate(
+        const ProblemSet = await Problem.updateOne(
             {_id : problemId},
             {$push:{TotalSubmit: {
                 date,
