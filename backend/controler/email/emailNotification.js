@@ -4,16 +4,20 @@ require('dotenv').config();
 const SMTP_URL = process.env.SMTP_URL
 
 const emailNotification = async (req , res) => {
-    const problemName = req.Problem;
-    const problemId = req.ProblemId;
+    const problemName = req.body.ProblemName;
+    const problemId = req.body.ProblemId;
     const userId = req.userId;
     try{
-        const getEamil = User.find({}).select('Email');
+        const getEmail = await User.find({}).select('_id, Email');
         const recivers = [];
-        for(let i = 0 ;i < getEamil.length ; i++){
-            recivers.push(getEamil[i].Email);
+        for(let i = 0 ;i < getEmail.length ; i++){
+            if(getEmail[i]._id === userId){
+                continue;
+            }
+            recivers.push(getEmail[i].Email);
         }
-        const getUser = User.findById({_id : userId}).select('Name');
+        console.log(recivers);
+        const getUser = await User.findOne({_id : userId}).select('Name');
         const link = process.env.CLIENT_URL + '/problemset/problem/' + problemId;
 
         const message = 
@@ -38,7 +42,8 @@ const emailNotification = async (req , res) => {
             return res.status(200).json({"msg" : "Notification sent to all users"});
         }
         else{
-            return res.json({"msg" : "SMTP Server Down"});
+            // console.log(response);
+            return res.status(500).json({"msg" : "SMTP Server Down"});
         }
     }
     catch (error){

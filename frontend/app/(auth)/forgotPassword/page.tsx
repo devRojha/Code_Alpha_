@@ -10,7 +10,7 @@ export default function ForgotPassword(){
 
     const sendLinkFun = async ()=>{
         try{
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/updatePassword`,{
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/email/forgotPassword`,{
                 Email,
             })
             router.push("/");
@@ -29,7 +29,7 @@ export default function ForgotPassword(){
                         <div className=" text-center text-2xl font-bold font-serif mb-4">Forgot Password</div>
                         <label className="my-2">Email</label>
                         <input type="email" onChange={(e)=>{setEmail(e.target.value)}} className="mb-8 border border-black rounded-md py-2 px-2  w-[300px]"/>
-
+                        <div>{Email}</div>
                         <div className="mt-8 flex justify-center">
                             <button onClick={sendLinkFun} className="border px-4 py-2 rounded-lg border-blue-500 hover:text-blue-900 hover:border-black active:text-white">Send Link</button>
                         </div>

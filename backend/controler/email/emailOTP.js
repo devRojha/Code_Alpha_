@@ -10,7 +10,7 @@ const SMTP_URL = process.env.SMTP_URL
 
 const emailOTP = async(req , res) => {
     try{
-        const Email = req.Email;
+        const Email = req.body.Email;
         const zodPass = emailVerified.safeParse({Email});
         if(!zodPass.success){
             return res.status(409).json({'msg' : "Email is not valid"});

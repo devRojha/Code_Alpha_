@@ -110,11 +110,11 @@ const updateProblemCode = async (req, res) => {
 };
 
 const updateUserPassword = async (req , res) => {
-    const id = req.id;
-    const Password = req.Passwordl;
+    const id = req.body.id;
+    const Password = req.body.Password;
     try{
         const hashedPassword = await bcrypt.hash(Password, 10);
-        await User.findByIdAndUpdate({_id : id}, {Password : hashedPassword});
+        await User.updateOne({_id : id}, {Password : hashedPassword});
         return res.status(200).json({msg : "Password is updated"});
     }
     catch (error) {

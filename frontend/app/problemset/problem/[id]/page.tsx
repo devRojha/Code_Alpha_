@@ -63,6 +63,8 @@ export default function Page() {
     const [AllsubmissionVeiw , setAllsubmissionView] = useState<boolean>(false);
     const [topicView, setTopicView] = useState<boolean>(false);
     const [compnayView, setCompanyView] = useState<boolean>(false);
+    const [authorView, setAuthorView] = useState<boolean>(false);
+    const [ProblemAuthor , setProblemAuthor] = useState<string>("Not Provided");
 
     const codeSubmit = async()=>{
         if(loginAtom){
@@ -212,7 +214,7 @@ export default function Page() {
                     if(response.data.Edit === "true" && Admin === "true"){
                         setcanEdit(true);
                     }
-    
+                    setProblemAuthor(response.data.Author || "Not Provided");
                     const userDetail = await axios(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile`,{
                         headers:{
                             Token : localStorage.getItem("Token")
@@ -308,7 +310,7 @@ export default function Page() {
                             <div className="text-2xl text-slate-400 font-bold mb-2">Example</div>
                             <div className="flex mb-4"><OutputShow outputCode={problem?.Example || "Not Given ..."} /> </div>
                         </div>
-                        <div className="border-b h-[285px] overflow-y-auto">
+                        <div className="border-b h-[300px] overflow-y-auto">
                             <button onClick={()=>setTopicView(!topicView)} className="border w-full text-start px-6 py-4 my-4 rounded-lg font-bold hover:text-blue-600">Topic</button>
                             <div className={`${(topicView)?"":"hidden"} w-full text-start px-6 my-4 flex flex-wrap`}>
                                 {problem?.Topic.map((topic, index)=>{
@@ -324,6 +326,10 @@ export default function Page() {
                                         <div key={index} className={` border mx-2 my-2 px-2 py-2 rounded-lg shadow-lg shadow-slate-400`}>{compnay}</div>
                                     )
                                 })}
+                            </div>
+                            <button onClick={()=> setAuthorView(!authorView)} className="border w-full text-start px-6 py-4 my-4 rounded-lg font-bold hover:text-blue-600">Author</button>
+                            <div className={`${(authorView)?"":"hidden"} w-full text-start px-6 my-4 flex flex-wrap1`}>
+                                <div className={` border mx-2 my-2 px-2 py-2 rounded-lg shadow-lg shadow-slate-400`}>{ProblemAuthor}</div>
                             </div>
                         </div>
                     </div>

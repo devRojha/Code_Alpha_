@@ -41,7 +41,6 @@ export default function SigninComponent(){
             alert("Signin Error")
         }
     };
-
     const router = useRouter();
     return (
         <div className="bg-slate-400 flex flex-col justify-center">
@@ -59,7 +58,7 @@ export default function SigninComponent(){
                             <button onClick={handleSubmit} className="border text-white px-3 py-1 rounded-lg text bg-zinc-700 hover:bg-zinc-900 active:border-black">Login</button>
                         </div>  
                         <div className="flex justify-center space-x-6">
-                            <button className=" text-blue-60 text-blue-700">Forgot Password</button>
+                            <button onClick={()=>{router.push("/forgotPassword")}} className=" text-blue-60 text-blue-700">Forgot Password</button>
                             <button onClick={()=>{router.push("/signup")}} className=" text-blue-60 text-blue-700">Register</button>
                         </div> 
                     </div>

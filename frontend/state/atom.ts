@@ -9,4 +9,9 @@ export const logedinState = atom<boolean>({
 export const adminState = atom<boolean>({
     key: 'adminState', // unique ID (with respect to other atoms/selectors)
     default: false, // default value (aka initial value)
-  });
+});
+
+export const UserNameState = atom<string>({
+  key : 'UserName',
+  default: 'CodeAlpha'
+})

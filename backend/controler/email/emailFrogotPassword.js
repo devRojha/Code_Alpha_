@@ -1,4 +1,5 @@
 const {z} = require("zod");
+const { User } = require("../../db");
 
 const emailVerified  = z.object({
     Email : z.string().email()
@@ -9,15 +10,21 @@ const SMTP_URL = process.env.SMTP_URL
 
 const emailForgotPassword = async(req , res) => {
     try{
-        const Email = req.Email;
+        const Email = req.body.Email;
+        console.log(Email);
         const zodPass = emailVerified.safeParse({Email});
         if(!zodPass.success){
             return res.status(409).json({'msg' : "Email is not valid"});
         }
         let recivers = [];
         recivers.push(Email);
-        const Api = process.env.CLIENT_URL + '/forgotPassword' ;
-        const userId = req.userId;
+        const Api = process.env.CLIENT_URL + '/changePassword' ;
+        const userFound = await User.findOne({Email : Email});
+        if(!userFound){
+            return res.status(404).json({msg : "User Not Found"});
+        }
+        const userId = userFound._id;
+        console.log(userId);
         const message= 
         `
 Hey There
@@ -39,7 +46,7 @@ Hey There
             body : JSON.stringify({authorEmail, authorTxt, recivers, message}),
         })
         if(response.ok){
-            res.status(200).json({"msg" : "OTP Sent"});
+            res.status(200).json({"msg" : "Password Reset Link Sent"});
         }
         else{
             console.log("Link sent failed with error from else");

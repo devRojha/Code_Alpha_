@@ -1,6 +1,7 @@
 "use client"
 
-import { adminState, logedinState } from "@/state/atom";
+import { adminState, logedinState, UserNameState } from "@/state/atom";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -11,6 +12,7 @@ export default function Appbar1() {
   const [Token , setToken]= useState<string>("");
   const [AdminAtom, setAdminAtom] = useRecoilState(adminState);
   const [loginAtom , setLoginAtom] = useRecoilState(logedinState);
+  const [UserName , setUserName] = useRecoilState(UserNameState);
 
   useEffect(()=>{
     try{
@@ -21,6 +23,15 @@ export default function Appbar1() {
         if(localStorage.getItem("Admin") === "true"){
           setAdminAtom(true);
         }
+        const getData = async () =>{
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile`, {
+                headers: {
+                    Token: localStorage.getItem("Token")
+                }
+          });
+          setUserName(response.data.Name);
+        }
+        getData();
       }
       else{
         setAdminAtom(false);
@@ -51,7 +62,7 @@ export default function Appbar1() {
             router.push("/");
             }} className="hover:text-blue-600">Log Out</button>
             <button onClick={()=> router.push("/profile")} className="hover:bg-blue-700 hover:text-white text-gray-600 active:border relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                <span className="font-medium  dark:text-gray-300">D</span>
+                <span className="font-medium  dark:text-gray-300">{UserName[0]}</span>
             </button>
         </div>
       </div>

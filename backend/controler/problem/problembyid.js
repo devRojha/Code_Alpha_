@@ -1,4 +1,4 @@
-const { Problem } = require("../../db")
+const { Problem, User } = require("../../db")
 
 
 
@@ -15,7 +15,8 @@ const problembyid =async (req , res)=>{
         if(problemFound.AdminId === userId){
             Edit = "true";
         }
-        return res.status(200).json({problem : problemFound, Edit});
+        const Author = await User.findOne({_id : problemFound.AdminId}).select("Name");
+        return res.status(200).json({problem : problemFound, Edit, "Author" : Author.Name});
     }
     catch(e){
         console.log("failed find single problem" + e);

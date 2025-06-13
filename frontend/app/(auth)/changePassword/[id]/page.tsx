@@ -20,15 +20,15 @@ export default function ChangePassword(){
         }
         else{
             try{
-                const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/updatePassword`,{
+                const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/userProfile/updatePassword`,{
                     id,
                     Password
                 })
                 alert(response.data.msg);
-                if(response.data.msg === "Password Updated"){
+                if(response.data.msg === "Password is updated"){
                     localStorage.removeItem("Token");
                     setloginState(false);
-                    router.push("/auth/signin");
+                    router.push("/signin");
                 }
             }
             catch(e){
