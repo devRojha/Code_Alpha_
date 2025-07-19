@@ -23,7 +23,7 @@ const executeJava = (filepath, inputPath) => {
         // clearTimeout(timeoutId);
         cleanup([inputPath, filepath]);
         return reject({ error: renameErr });
-      }
+    }
 
       // Compile the Java file
       exec(`javac ${tempFilePath}`, (compileError, compileStdout, compileStderr) => {

@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import cors from 'cors';
 
 const app: Application = express();
-const port = 3012;
+const port = 5001;
 
 app.use(cors());
 app.use(express.json());

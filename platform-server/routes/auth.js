@@ -1,10 +1,7 @@
 
 const express = require("express");
-const userSignin = require("../controler/auth/userSignin.js")
-const userSignup = require("../controler/auth/userSignup.js")
+const { userSignin, userSignup, adminSignin, adminSignup } = require("../controllers/auth/auth.controller.js");
 
-const adminSignin = require("../controler/auth/adminSignin.js")
-const adminSignup = require("../controler/auth/adminSignup.js")
 
 
 

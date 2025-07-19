@@ -1,15 +1,14 @@
 
 const express = require("express");
-const userProblemStatus = require("../controler/userDetail/userProblemArray");
-const allUsers = require("../controler/userDetail/allUsers");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+const { allUsers, allProblem } = require("../controllers/userDetail/userDetail.controller");
 
 
 const router = express.Router();
 
 
-router.get("/problemstatus",authMiddleware, userProblemStatus);
-router.get("/all",authMiddleware, allUsers);
+router.get("/problemstatus", authMiddleware, allProblem);
+router.get("/all", authMiddleware, allUsers);
 
 
 
