@@ -21,7 +21,6 @@ export default function SigninComponent(){
                 Email,
                 Password
             });
-            // console.log(response.data)
             if (response.data.Token) {
                 localStorage.setItem("Token", response.data.Token);
                 setLoginAtom(true);

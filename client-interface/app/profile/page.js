@@ -1,10 +1,10 @@
 "use client"
 
-import { adminState } from "@/state/atom";
+import { adminState, logedinState } from "@/state/atom";
 import axios from "axios"
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 
 export default function Page() {
@@ -23,7 +23,7 @@ export default function Page() {
     const [AllUser , setAllUser] = useState([]);
     const [TotalProblem, setTotalProblem] = useState(0);
     const [progresBar , setProgresBar] = useState(0);
-    // const [admin , setAdmin] = useState(false);
+    const setLoginAtom = useSetRecoilState(logedinState);
     const adminatom = useRecoilValue(adminState);
 
 
@@ -47,7 +47,7 @@ export default function Page() {
 
                 // fetchnig problem which created by adminatom
                 const response1 = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/allproblem`)
-                const filterByAdmin = response1.data.Problems?.filter(problem => problem.AdminId === response.data._id) || [];
+                const filterByAdmin = response1.data.problems?.filter(problem => problem.AdminId === response.data._id) || [];
                 const easycreate = filterByAdmin?.filter(problem => problem.Deficulty === "Easy") || [];
                 const mediumcreate = filterByAdmin?.filter(problem => problem.Deficulty === "Medium") || [];
                 const hardcreate = filterByAdmin?.filter(problem => problem.Deficulty === "Hard") || [];
@@ -55,7 +55,7 @@ export default function Page() {
                 setMediumCreate(mediumcreate);
                 setHardCreate(hardcreate);
 
-
+                // Dashboard
                 let ResUser = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/all`,{
                     headers:{
                         Token: localStorage.getItem("Token")
@@ -65,7 +65,7 @@ export default function Page() {
                 users.sort((a, b) => b.ProblemSolved.length - a.ProblemSolved.length);
                 setAllUser(users);
                 let allProblem = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/allproblem`)
-                setTotalProblem(allProblem.data.Problems.length);
+                setTotalProblem(allProblem.data.problems.length);
                 //setting progres bar %
                 setProgresBar(Math.floor((response.data.ProblemSolved?.length*100)/allProblem.data.Problems.length));
             } catch (error) {
@@ -85,8 +85,9 @@ export default function Page() {
                     Token : localStorage.getItem("Token")
                 }
             })
-            if(response.data.msg == "user updated"){
+            if(response.data.msg == "User updated"){
                 alert("user updated succesfully")
+                router.push("/profile");
             }
         }
         catch(e){
@@ -101,16 +102,18 @@ export default function Page() {
                     Token : localStorage.getItem("Token")
                 }
             })
-            if(response.data.msg === "user deleted"){
+            if(response.data.msg === "User deleted"){
+                
                 alert("User deleted Succesfully")
                 localStorage.clear();
-                router.push("/");
+                setLoginAtom(false);
             }
         }
         catch(e){
             console.log("fontError : "+e);
             alert("error while fetching");
         }
+        router.push("/");
     }
 
     return (

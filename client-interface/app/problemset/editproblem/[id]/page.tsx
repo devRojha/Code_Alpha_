@@ -42,7 +42,7 @@ export default function Page(){
                 setProblem(response.data.problem);
 
                 const Admin = localStorage.getItem("Admin")
-                if(!(response.data.Edit === "true" && Admin === "true")){
+                if(!(response.data.Edit === true && Admin === "true")){
                     router.push("/")
                 }
             }
@@ -53,6 +53,35 @@ export default function Page(){
         getProblem();
     },[id])
 
+    const EditProblem = async () => {
+        if(admin === false){
+            router.push("/");
+            alert("Not an admin");
+        }
+        else{
+            const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/editproblem`,{
+                id: id,
+                Title: (Title || problem?.Title),
+                Description: (Description || problem?.Description),
+                Deficulty : (Deficulty || problem?.Deficulty),
+                Constraint : (Constraint || problem?.Constraint),
+                Example : (Example || problem?.Example), 
+                Company : (Company || problem?.Company.join(", ")),
+                Topic : (Topic || problem?.Topic.join(", ")),
+            }, {
+                headers: {
+                    Token: localStorage.getItem("Token")
+                }
+            })
+            if (response.data.problemSet.acknowledged === true) {
+                alert("Problem Edit Succesfull");
+                router.push(`/problemset/problem/${id}`);
+                return;
+            }
+        }
+        alert("Problem Edit fail");
+        router.push(`/problemset/problem/${id}`);
+    }
 
     return (
         <div className="bg-zinc-900 pt-8 text-white px-8 border-b">
@@ -93,28 +122,7 @@ export default function Page(){
                 <input onChange={(e)=>{setCompany(e.target.value);}} className="max-md:mx-0 max-md:my-4 ml-8 py-3 px-2 border rounded-lg text-black text-2xl w-[50%] max-lg:w-[70%] max-md:w-[95%] focus:outline-none" placeholder={`${problem?.Company}`}/>
             </div>
             <div className="pb-10 flex">
-                <button onClick={()=>{
-                    if(admin === false){
-                        router.push("/");
-                        alert("Not an admin");
-                    }
-                    else{
-                        axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problem/editproblem`,{
-                            id: id,
-                            Title: (Title || problem?.Title),
-                            Description: (Description || problem?.Description),
-                            Deficulty : (Deficulty || problem?.Deficulty),
-                            Constraint : (Constraint || problem?.Constraint),
-                            Example : (Example || problem?.Example), 
-                            Company : (Company || problem?.Company.join(", ")),
-                            Topic : (Topic || problem?.Topic.join(", ")),
-                        }, {
-                            headers: {
-                                Token: localStorage.getItem("Token")
-                            }
-                        })
-                    }
-                }} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800">Edit</button>
+                <button onClick={EditProblem} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800">Edit</button>
                 <button onClick={()=>router.push(`/problemset/addTestCases/${id}`)} className="px-3 py-1 border rounded-lg text-2xl hover:border-blue-800 active:text-blue-800 ml-6">Add Test cases</button>
             </div>
         </div>

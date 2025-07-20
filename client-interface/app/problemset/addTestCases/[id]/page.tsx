@@ -51,6 +51,7 @@ export default function Page() {
                 );
                 if (response.data.msg) {
                     alert(response.data.msg);
+                    router.push(`/problemset/problem/${id}`)
                 }
             }
         } catch (e) {

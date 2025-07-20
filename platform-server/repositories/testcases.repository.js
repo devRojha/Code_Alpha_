@@ -16,7 +16,7 @@ const createTestCases = async (AdminId, ProblemId, Cases, Result) => {
     return null;
 }
 
-const deleteTestCases = async (uniqueParam) => {
+const deleteTestCasesByParm = async (uniqueParam) => {
     await TestCases.deleteOne(uniqueParam);
     return null;
 }
@@ -36,6 +36,6 @@ const updateTestCasesByUniqueParm = async (uniqueParam, AdminId, testCase, Cases
 module.exports = {
     findTestcasesByUniqueParm,
     createTestCases,
-    deleteTestCases,
+    deleteTestCasesByParm,
     updateTestCasesByUniqueParm
 }

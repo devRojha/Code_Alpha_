@@ -59,7 +59,7 @@ export default function Page() {
                 headers: {
                 Token: localStorage.getItem("Token") 
             }});
-            const FetchProblems = response1.data.Problems;
+            const FetchProblems = response1.data.problems;
             const UserProblemsolved = response2.data.ProblemSolved;
             var Problems =[];
             for(var i = 0 ; i < FetchProblems.length ; i++){

@@ -211,7 +211,7 @@ export default function Page() {
                     setProblem(response.data.problem);
                     setAllsubmission(response.data.problem.TotalSubmit)
                     const Admin = localStorage.getItem("Admin")
-                    if(response.data.Edit === "true" && Admin === "true"){
+                    if(response.data.Edit === true && Admin === "true"){
                         setcanEdit(true);
                     }
                     setProblemAuthor(response.data.Author || "Not Provided");

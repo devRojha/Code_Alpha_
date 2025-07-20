@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const executeCode = require("./executeCode");
-const generateInputFile = require("./generateInputFile");
-const generateCodeFile = require("./generateCodeFile");
+const executeCode = require("./execution/executeCode");
+const generateInputFile = require("./fileManagement/generateInputFile");
+const generateCodeFile = require("./fileManagement/generateCodeFile");
 
 const app = express();
 app.use(cors());
@@ -30,8 +30,7 @@ app.post("/submit" , async (req , res)=>{
     if(code === undefined || !(code.length > 0)){
         return res.status(404).json({success : "false" , message:"empty code"})
     }
-    // console.log(testCases)
-    // const filePath = generateCodeFile(lang , code);
+
     var result = [];
     let i = 0;
     var time = 0.0;
@@ -54,4 +53,4 @@ app.post("/submit" , async (req , res)=>{
     }
 })
 
-app.listen(5000 , ()=>console.log("backend 2 online on 5000 "))
+app.listen(5001 , ()=>console.log("backend 2 online on 5001 "))

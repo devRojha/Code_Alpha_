@@ -1,5 +1,5 @@
 
-const { findTestcasesByUniqueParm, createTestCases, updateTestCasesByUniqueParm } = require("../../repositories/testcases.repository");
+const { findTestcasesByUniqueParm, createTestCases, updateTestCasesByUniqueParm, deleteTestCasesByParm } = require("../../repositories/testcases.repository");
 
 
 const addTestCases = async (userId, { problemId, Cases, Result }) => {
@@ -45,7 +45,7 @@ const compareResult = async ({ codeOutput, problemid }) => {
 
 const deleteTestCases = async (problemId) => {
     const uniqueParam = { ProblemId: problemId };
-    await deleteTestCases(uniqueParam);
+    await deleteTestCasesByParm(uniqueParam);
     return { msg: "Test cases deleted" };
 };
 

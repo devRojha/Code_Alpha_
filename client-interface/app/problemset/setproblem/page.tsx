@@ -58,6 +58,7 @@ export default function Page(){
                 else{
                     alert("Problem Not Added");
                 }
+                router.push("/problemset")
             }
             catch(e){
                 console.log(e);

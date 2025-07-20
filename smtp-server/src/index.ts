@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import cors from 'cors';
 
 const app: Application = express();
-const port = 5001;
+const port = 3012;
 
 app.use(cors());
 app.use(express.json());
@@ -33,7 +33,7 @@ const sendEmail = async (
         from: senderEmail,
         to: recivers.join(','),
         subject: 'Elective Notification',
-        text: `${message}\n\n For any query reach out to me on Email : devrajk0405@gmail.com`,
+        text: `${message}\n\nWebsite : https://elective.vercel.app`,
     };
 
     const emailResponse = await transporter.sendMail(mailOptions);

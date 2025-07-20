@@ -25,7 +25,7 @@ export default function ChangePassword(){
                     Password
                 })
                 alert(response.data.msg);
-                if(response.data.msg === "Password is updated"){
+                if(response.data.msg === "Password updated"){
                     localStorage.removeItem("Token");
                     setloginState(false);
                     router.push("/signin");

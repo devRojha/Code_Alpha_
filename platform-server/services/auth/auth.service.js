@@ -29,8 +29,8 @@ const adminSignin = async ({ Email, Password }) => {
     }
 
     const payload = { userId: userFind._id };
-    const token = generateToken(payload);
-    return { token };
+    const Token = generateToken(payload);
+    return { Token };
 };
 
 const adminSignup = async ({ Name, Email, Password, AdminSecret, OTP}) => {
@@ -63,8 +63,8 @@ const adminSignup = async ({ Name, Email, Password, AdminSecret, OTP}) => {
     const newUser = await createUser(Name, Email, hashedPassword, Admin);
 
     const payload = { userId: newUser._id };
-    const token = generateToken(payload);
-    return { token };
+    const Token = generateToken(payload);
+    return { Token };
 };
 
 const userSignin = async ({ Email, Password }) => {
@@ -91,8 +91,8 @@ const userSignin = async ({ Email, Password }) => {
     }
 
     const payload = { userId: userFind._id };
-    const token = generateToken(payload);
-    return { token };
+    const Token = generateToken(payload);
+    return { Token };
 };
 
 const userSignup = async ({ Name, Email, Password, OTP }) => {
@@ -124,8 +124,8 @@ const userSignup = async ({ Name, Email, Password, OTP }) => {
     const newUser = await createUser(Name, Email, hashedPassword, admin)
 
     const payload = { userId: newUser._id };
-    const token = generateToken(payload);
-    return { token };
+    const Token = generateToken(payload);
+    return { Token };
 };
 
 module.exports = {
