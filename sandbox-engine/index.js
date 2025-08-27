@@ -27,8 +27,18 @@ app.post("/run", async (req, res) => {
 
 app.post("/submit" , async (req , res)=>{
     const {code , lang="cpp" , testCases} = req.body;
+
+    console.log(code);
+    console.log(testCases);
     if(code === undefined || !(code.length > 0)){
         return res.status(404).json({success : "false" , message:"empty code"})
+    }
+
+    if (!testCases || !Array.isArray(testCases) || testCases.length === 0) {
+        return res.status(400).json({
+        success: false,
+        message: "testCases is required and must be a non-empty array",
+        });
     }
 
     var result = [];

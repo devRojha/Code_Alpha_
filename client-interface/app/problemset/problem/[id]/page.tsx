@@ -65,6 +65,10 @@ export default function Page() {
     const [compnayView, setCompanyView] = useState<boolean>(false);
     const [authorView, setAuthorView] = useState<boolean>(false);
     const [ProblemAuthor , setProblemAuthor] = useState<string>("Not Provided");
+    const [feedback, setFeedback] = useState<string>("");
+    const [feedbackButton, setFeedbackButton] = useState<boolean>(false);
+    const [seeFeedback, setSeeFeedback] = useState<boolean>(false);
+    
 
     const codeSubmit = async()=>{
         if(loginAtom){
@@ -76,7 +80,7 @@ export default function Page() {
                     ProblemId : id
                 }
             })
-            const testCases = response.data.testCase;
+            const testCases = response.data.testCases;
             // console.log(testCases);
             try {
                 //submit code and testcases for getting output
@@ -132,6 +136,8 @@ export default function Page() {
                 }
                 setShowSubmit(true);
                 setInputView(false); setOutputView(true); setVerdic(false);
+                // get feedback
+                setFeedbackButton(true);
             } catch (error:any) {
                 // console.log(error.response.data);
                 var errorData = "Somthing Wrong......";
@@ -364,6 +370,20 @@ export default function Page() {
                     <div className="h-full space-x-4 ">
                         <button onClick={codeExecute} className="h-full bg-blue-700 hover:bg-blue-800 active:text-black border rounded-lg px-2 py-1">Run</button>
                         <button onClick={codeSubmit} className="h-full hover:bg-green-700 active:text-black border rounded-lg px-2 py-1 bg-green-800">Submit</button>
+                        <button onClick={async ()=> {
+                            if (seeFeedback == true) {
+                                setSeeFeedback(false);
+                                window.location.reload();
+                            }
+                            else {
+                                setSeeFeedback(true)
+                                const feedbackResponse = await axios.post(`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/feedback`, {
+                                    lang,
+                                    code,
+                                })
+                                setFeedback(feedbackResponse.data.feedback);
+                            }
+                        }} className={`${feedbackButton ? "" : "hidden"} h-full hover:bg-green-700 active:text-black border rounded-lg px-2 py-1 bg-yellow-800`}>{seeFeedback ? "Back to Code" : "Feedback"}</button>
                     </div>
                     {/* selecting lang and scaleton  */}
                     <select onChange={(e)=>{
@@ -382,7 +402,11 @@ export default function Page() {
                     </select>
                 </div>
                 <div  className="bg-black focus:outline-none border-b  h-[700px]">
-                    <CodeEditorcool setCode={setCode} code={code}/>
+                    {seeFeedback ? 
+                        <CodeEditorcool setCode={setCode} code={feedback}/>
+                    : <CodeEditorcool setCode={setCode} code={code}/>
+                    }
+                    
                 </div>
                 {/* terminal section  */}
                 <div className=" h-[350px]"  >
