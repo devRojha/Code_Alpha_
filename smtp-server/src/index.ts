@@ -1,5 +1,4 @@
 import express, { Application, Request, Response } from 'express';
-import nodemailer from 'nodemailer';
 import cors from 'cors';
 
 const app: Application = express();
@@ -15,29 +14,25 @@ interface EmailRequest {
     message: string;
 }
 
-const sendEmail = async (
-    senderEmail: string,
-    senderPassword: string,
-    recivers: string[],
-    message: string
-): Promise<void> => {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: senderEmail,
-            pass: senderPassword,
+const sendEmail = async (authorEmail: string, authorTxt: string, recivers: string[], message: string): Promise<void> => {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+            'api-key': authorTxt,
+            'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+            sender: { email: authorEmail, name: 'Code Alpha' },
+            to: recivers.map((email: string) => ({ email })),
+            subject: 'Your OTP Code',
+            textContent: message,
+        }),
     });
 
-    const mailOptions = {
-        from: senderEmail,
-        to: recivers.join(','),
-        subject: 'Elective Notification',
-        text: `${message}\n\nWebsite : https://elective.vercel.app`,
-    };
-
-    const emailResponse = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', emailResponse);
+    if (!response.ok) {
+        const err = await response.text();
+        throw new Error(err);
+    }
 };
 
 app.post('/send-email', async (req: any, res: any) => {

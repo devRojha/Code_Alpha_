@@ -1,8 +1,8 @@
 
-require('dotenv').config;
+require('dotenv').config();
 
 const authorEmail = process.env.EMAIL;
-const authorTxt = process.env.APP_PASSWORD;
+const authorTxt = process.env.BREVO_API_KEY;
 const SMTP_URL = process.env.SMTP_URL;
 
 const sendEmail = async (recivers, message) => {
